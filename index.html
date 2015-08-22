@@ -4,20 +4,19 @@
 <meta charset="UTF-8">
 <title>Untitled Document</title>
 </head>
-</head>
 <body>
 <body>
  <script>
 document.getElementById('sdk-js').onload = function() {
   println('SDK Loaded');
-      
+
   var btn = document.createElement('input');
       btn.setAttribute('type', 'submit');
       btn.setAttribute('value', 'Log in');
       btn.addEventListener('click', login);
   document.body.appendChild(btn);
-    
-    
+
+
   /* Initialize Digits SDK using your application's consumer key. */
   Digits.init({ consumerKey: 'gmoaaZhEG88hMQUdpWHnF1IAz' })
     .done(function(){
@@ -29,26 +28,26 @@ document.getElementById('sdk-js').onload = function() {
     .fail(function(){
       println("Digits failed to initialize")
     })
-    
 
-    
+
+
   /* Launch the Login to Digits flow. */
   function login(){
     println('SDK Start Login flow');
-    
+
     Digits.logIn()
       .done(onLogin)
       .fail(onLoginFailure);
-  } 
-  
-    
+  }
+
+
   /*
    * loginStatusResponse = {
    *   status: string ["unknown"|"not_authorized"|"authorized"],
    *   oauth_echo_headers: {
    *     'X-Verify-Credentials-Authorization': string (HTTP Request header)
    *     'X-Auth-Service-Provider': string (HTTP Request Url)
-   *   } 
+   *   }
    * }
    *
    *    unknown:          User is not logged in to Digits, may or may not have authorized your app
@@ -60,7 +59,7 @@ document.getElementById('sdk-js').onload = function() {
   function onLoginStatus(loginStatusResponse){
     println('Login status: ', loginStatusResponse);
   }
-  
+
   /*
    * error = {
    *   type: string,
@@ -68,10 +67,10 @@ document.getElementById('sdk-js').onload = function() {
    * }
    */
   function onLoginStatusFailure(error){
-    println('Login status error: ', error); 
-  }  
-   
-        
+    println('Login status error: ', error);
+  }
+
+
   /*
    * loginResponse = {
    *   oauth_echo_headers: {
@@ -83,18 +82,18 @@ document.getElementById('sdk-js').onload = function() {
    */
   function onLogin(loginResponse){
     println('oAuthEcho Headers: ', loginResponse);
-    
+
     // You must POST these headers to your server to safely invoke Digits' API
     // and get the logged-in user's data. You will not be able to call it directly
     // from the browser.
     var oAuthHeaders = parseOAuthHeaders(loginResponse.oauth_echo_headers);
-    
-    // For DEMO purposes 
+
+    // For DEMO purposes
     var requestUrl = ["curl '", oAuthHeaders.apiUrl, "' -H 'Authorization: ", oAuthHeaders.headers, "'"].join('');
-    println('cURL:'); 
-    println('', requestUrl); 
+    println('cURL:');
+    println('', requestUrl);
   }
-  
+
   /*
    * error = {
    *   type: string,
@@ -104,31 +103,31 @@ document.getElementById('sdk-js').onload = function() {
    * Note: type == 'abort' means the user closed the Login flow
    */
   function onLoginFailure(error){
-    println('Login error: ', error); 
-  }  
-    
+    println('Login error: ', error);
+  }
+
   function parseOAuthHeaders(oAuthEchoHeaders) {
     var credentials = oAuthEchoHeaders['X-Verify-Credentials-Authorization'];
     var apiUrl = oAuthEchoHeaders['X-Auth-Service-Provider'];
-              
+
     return {
       apiUrl: apiUrl,
       headers: credentials
     };
-  } 
-    
+  }
+
   function println(text, response) {
     var message = document.createElement('p');
     message.innerText = text;
-    
+
     if (response){
       var code = document.createElement('code');
       code.innerText = typeof response == 'string' ? response : JSON.stringify(response);
       message.appendChild(code);
     }
-    
+
     document.body.appendChild(message);
-  } 
+  }
 };
   </script>
 
@@ -181,7 +180,7 @@ document.getElementById('sdk-js').onload = function() {
       <span class="u-hiddenInWideEnv"><a href="https://twitter.com/download" data-scribe="element:logo"><div class="Icon Icon--twitter " aria-label="Get Twitter app" title="Get Twitter app" role="img"></div>
 </a></span>
     </div>
-    
+
 <div class="Tweet-author u-textTruncate h-card p-author" data-scribe="component:author">
   <a class="Tweet-authorLink Identity u-linkBlend" data-scribe="element:user_link" href="https://twitter.com/TwitterAds" aria-label="Twitter Advertising (screen name: TwitterAds)">
     <span class="Tweet-authorAvatar Identity-avatar">
@@ -199,7 +198,7 @@ document.getElementById('sdk-js').onload = function() {
   <div class="Tweet-body e-entry-content" data-scribe="component:tweet">
     <p class="Tweet-text e-entry-title" lang="en" dir="ltr">Connect &amp; discover: The Sunset Beach Clean Up story in. <a href="http://t.co/TRRiDAbkUR" rel="nofollow" dir="ltr" data-expanded-url="http://youtu.be/15u2G-L07x8" class="link customisable" target="_blank" title="http://youtu.be/15u2G-L07x8" data-scribe="element:url"><span class="u-hiddenVisually">http://</span>youtu.be/15u2G-L07x8<span class="u-hiddenVisually">&nbsp;</span></a></p>
     <div class="Tweet-metadata dateline">
-      
+
 
 <a class="u-linkBlend u-url customisable-highlight long-permalink" data-datetime="2013-11-08T14:55:11+0000" data-scribe="element:full_timestamp" href="https://twitter.com/TwitterAds/status/398826034499698688">
 
@@ -214,14 +213,14 @@ document.getElementById('sdk-js').onload = function() {
     </div>
 
         <div class="Tweet-card">
-  
-  
-  
-  
-  
+
+
+
+
+
 <article class="MediaCard
-           
-           
+
+
            cards-multimedia
            customisable-border" data-scribe="component:card" data-card-name="player" data-publisher-id="10228272" dir="ltr">
       <header class="MediaCard-siteUser">
@@ -238,10 +237,10 @@ document.getElementById('sdk-js').onload = function() {
       </div>
     </div>
   </div>
-    
+
 </article>
 
-  
+
 </div>
 
     <ul class="Tweet-actions" data-scribe="component:actions" role="menu" aria-label="Tweet actions">
@@ -277,10 +276,10 @@ document.getElementById('sdk-js').onload = function() {
 								<p>
 									Donate For suplies To help Clean Up The Beach!
 							</p>
-                                <script type="text/javascript" 
+                                <script type="text/javascript"
 
 src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-<script type="text/javascript" 
+<script type="text/javascript"
 
 src="https://www.simplify.com/commerce/v1/simplify.js"></script>
 <script>
@@ -311,7 +310,7 @@ $(document).ready(function() {
 <form id="simplify-payment-form" action="" method="POST">
     <div>
         <label>Credit Card Number: </label>
-        <input id="cc-number" type="text" maxlength="20" autocomplete="off" value="" 
+        <input id="cc-number" type="text" maxlength="20" autocomplete="off" value=""
 
 autofocus />
     </div>
@@ -348,9 +347,9 @@ autofocus />
             <option value="22">2022</option>
         </select>
     </div>
-    
+
     <button id="process-payment-btn" type="submit">Process Payment</button>
-    
+
 
 <script>
 function simplifyResponseHandler(data) {
@@ -389,7 +388,7 @@ var Simplify = require("simplify-commerce"),
         publicKey: 'sbpb_NDUxNjA2OGItYTkyOC00ZjA4LThhZmItZDJlOTVjNDI5NDZl',
         privateKey: '0EmF7Lbezm3yph8syaCIcvxeJOikjrRXjmYVCUZQt+F5YFFQL0ODSXAOkNtXTToq'
     });
- 
+
 client.payment.create({
     amount : "10",
     token : "[TOKEN ID]",
@@ -397,13 +396,13 @@ client.payment.create({
     reference : "7a6ef6be31",
     currency : "USD"
 }, function(errData, data){
- 
+
     if(errData){
         console.error("Error Message: " + errData.data.error.message);
         // handle the error
         return;
     }
- 
+
     console.log("Payment Status: " + data.paymentStatus);
 });
 </script>
