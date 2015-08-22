@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -16,76 +17,184 @@
 </head>
 
 <body>
+ <script>
+document.getElementById('sdk-js').onload = function() {
+  println('SDK Loaded');
 
-	<body>
+  var btn = document.createElement('input');
+      btn.setAttribute('type', 'submit');
+      btn.setAttribute('value', 'Log in');
+      btn.addEventListener('click', login);
+  document.body.appendChild(btn);
+
+
+  /* Initialize Digits SDK using your application's consumer key. */
+  Digits.init({ consumerKey: 'gmoaaZhEG88hMQUdpWHnF1IAz' })
+    .done(function(){
+      println("Digits is initialized")
+      // Digits.getLoginStatus()
+      //   .done(onLoginStatus)
+      //   .fail(onLoginStatusFailure);
+    })
+    .fail(function(){
+      println("Digits failed to initialize")
+    })
+
+
+
+  /* Launch the Login to Digits flow. */
+  function login(){
+    println('SDK Start Login flow');
+
+    Digits.logIn()
+      .done(onLogin)
+      .fail(onLoginFailure);
+  }
+
+
+  /*
+   * loginStatusResponse = {
+   *   status: string ["unknown"|"not_authorized"|"authorized"],
+   *   oauth_echo_headers: {
+   *     'X-Verify-Credentials-Authorization': string (HTTP Request header)
+   *     'X-Auth-Service-Provider': string (HTTP Request Url)
+   *   }
+   * }
+   *
+   *    unknown:          User is not logged in to Digits, may or may not have authorized your app
+   *    not_authorized:   User is logged in to Digits but has not authorized your app yet.
+   *    authorized:       User is logged in to Digits and has authorized your app.
+   *
+   *    NOTE: The OAuth Echo headers will only be returned if User has authorized your app.
+   */
+  function onLoginStatus(loginStatusResponse){
+    println('Login status: ', loginStatusResponse);
+  }
+
+  /*
+   * error = {
+   *   type: string,
+   *   message: string
+   * }
+   */
+  function onLoginStatusFailure(error){
+    println('Login status error: ', error);
+  }
+
+
+  /*
+   * loginResponse = {
+   *   oauth_echo_headers: {
+   *     'X-Verify-Credentials-Authorization': string (HTTP Request header)
+   *     'X-Auth-Service-Provider': string (HTTP Request Url)
+   *   }
+   * }
+   *
+   */
+  function onLogin(loginResponse){
+    println('oAuthEcho Headers: ', loginResponse);
+
+    // You must POST these headers to your server to safely invoke Digits' API
+    // and get the logged-in user's data. You will not be able to call it directly
+    // from the browser.
+    var oAuthHeaders = parseOAuthHeaders(loginResponse.oauth_echo_headers);
+
+    // For DEMO purposes
+    var requestUrl = ["curl '", oAuthHeaders.apiUrl, "' -H 'Authorization: ", oAuthHeaders.headers, "'"].join('');
+    println('cURL:');
+    println('', requestUrl);
+  }
+
+  /*
+   * error = {
+   *   type: string,
+   *   message: string
+   * }
+   *
+   * Note: type == 'abort' means the user closed the Login flow
+   */
+  function onLoginFailure(error){
+    println('Login error: ', error);
+  }
+
+  function parseOAuthHeaders(oAuthEchoHeaders) {
+    var credentials = oAuthEchoHeaders['X-Verify-Credentials-Authorization'];
+    var apiUrl = oAuthEchoHeaders['X-Auth-Service-Provider'];
+
+    return {
+      apiUrl: apiUrl,
+      headers: credentials
+    };
+  }
+
+  function println(text, response) {
+    var message = document.createElement('p');
+    message.innerText = text;
+
+    if (response){
+      var code = document.createElement('code');
+      code.innerText = typeof response == 'string' ? response : JSON.stringify(response);
+      message.appendChild(code);
+    }
+
+    document.body.appendChild(message);
+  }
+};
+  </script>
 
 		<!-- Wrapper-->
-		<div id="wrapper">
+			<div id="wrapper">
 
-			<!-- Nav -->
-			<nav id="nav">
-				<a href="#me" class="icon fa-home active">
-					<span>Home</span>
-				</a>
-				<a href="#work" class="icon fa-folder">
-					<span>Donation</span>
-				</a>
-				<a href="#contact" class="icon fa-envelope">
-					<href="mailto:erpreid@gmail.com">
-						<span>Contact</span>
-				</a>
-				<a href="#" class="icon fa-twitter">
-					<span>Twitter</span>
-				</a>
-			</nav>
+				<!-- Nav -->
+					<nav id="nav">
+						<a href="#me" class="icon fa-home active"><span>Home</span></a>
+						<a href="#work" class="icon fa-folder"><span>Donation</span></a>
+						<a href="#contact" class="icon fa-envelope"> <href="mailto:erpreid@gmail.com"><span>Contact</span></a>
+						<a href="#" class="icon fa-twitter"><span>Twitter</span></a>
+					</nav>
 
-			<!-- Main -->
-			<div id="main">
+				<!-- Main -->
+					<div id="main">
 
-				<!-- Me -->
-				<article id="me" class="panel">
-					<div class="bar bar-header bar-dark">
-						<h1 class="title">Clean Up Sunset Beach</h1>
-					</div>
-					<meta name="twitter:card" content="summary_large_image">
-					<meta name="twitter:site" content="@nytimes">
-					<meta name="twitter:creator" content="@SarahMaslinNir">
-					<meta name="twitter:title" content="Parade of Fans for Houston’s Funeral">
-					<meta name="twitter:description" content="NEWARK - The guest list and parade of limousines with celebrities emerging from them seemed more suited to a red carpet event in Hollywood or New York than than a gritty stretch of Sussex Avenue near the former site of the James M. Baxter Terrace public housing project here.">
-					<meta name="twitter:image" content="http://graphics8.nytimes.com/images/2012/02/19/us/19whitney-span/19whitney-span-articleLarge.jpg">
-					<a href="#work" class="jumplink pic">
-						<span class="arrow icon fa-chevron-right">
-							<span>See my work</span>
-						</span>
-						<img src="http://media-cdn.tripadvisor.com/media/photo-s/01/d1/af/5b/preston-beach-sunset.jpg" " />
+						<!-- Me -->
+					  <article id="me" class="panel">
+								<header>
+								  <h1>Help Clean Up Sunset Beach</h1>
+								  <p>Help Clean Up Sunset Beach on 10/24/15</p>
+								  <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@nytimes">
+<meta name="twitter:creator" content="@SarahMaslinNir">
+<meta name="twitter:title" content="Parade of Fans for Houston’s Funeral">
+<meta name="twitter:description" content="NEWARK - The guest list and parade of limousines with celebrities emerging from them seemed more suited to a red carpet event in Hollywood or New York than than a gritty stretch of Sussex Avenue near the former site of the James M. Baxter Terrace public housing project here.">
+<meta name="twitter:image" content="http://graphics8.nytimes.com/images/2012/02/19/us/19whitney-span/19whitney-span-articleLarge.jpg">
+                                </header>
+								<a href="#work" class="jumplink pic">
+									<span class="arrow icon fa-chevron-right"><span>See my work</span></span>
+									<img src="http://media-cdn.tripadvisor.com/media/photo-s/01/d1/af/5b/preston-beach-sunset.jpg"" />
 								</a>
 							</article>
 
 						<!-- Work -->
 							<article id="work " class="panel ">
 								<header>
-								 <html class="SandboxRoot "><head><base target="# "><link type="text/css " rel="stylesheet " href="https://platform.twitter.com/css/tweet.a628960e3573c02b8650fcbd305178b9.light.ltr.css "></head><body><div class="EmbeddedTweet
-						" data-iframe-title="Twitter Tweet " data-dt-full="%{hours12}:%{minutes} %{amPm} - %{day} %{month} %{year} " data-dt-months="Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec " data-dt-am="AM " data-dt-pm="PM " data-dt-now="now " data-dt-s="s " data-dt-m="m
-						" data-dt-h="h " data-dt-second="second " data-dt-seconds="seconds " data-dt-minute="minute " data-dt-minutes="minutes " data-dt-hour="hour " data-dt-hours="hours " data-dt-abbr="%{number}%{symbol} " data-dt-short="%{day} %{month} " data-dt-long="%{day} %{month}
-						%{year} " data-scribe="page:tweet element:chrome " lang="en " data-twitter-event-id="0 ">
+								 <html class="SandboxRoot"><head><base target="_blank"><link type="text/css" rel="stylesheet" href="https://platform.twitter.com/css/tweet.a628960e3573c02b8650fcbd305178b9.light.ltr.css"></head><body><div class="EmbeddedTweet" data-iframe-title="Twitter Tweet" data-dt-full="%{hours12}:%{minutes} %{amPm} - %{day} %{month} %{year}" data-dt-months="Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec" data-dt-am="AM" data-dt-pm="PM" data-dt-now="now" data-dt-s="s" data-dt-m="m" data-dt-h="h" data-dt-second="second" data-dt-seconds="seconds" data-dt-minute="minute" data-dt-minutes="minutes" data-dt-hour="hour" data-dt-hours="hours" data-dt-abbr="%{number}%{symbol}" data-dt-short="%{day} %{month}" data-dt-long="%{day} %{month} %{year}" data-scribe="page:tweet element:chrome" lang="en" data-twitter-event-id="0">
 
-    <div class="EmbeddedTweet-tweet ">
-<blockquote class="Tweet h-entry tweet subject expanded " cite="https://twitter.com/TwitterAds/status/398826034499698688 " data-tweet-id="398826034499698688 " data-scribe="section:subject ">
-  <div class="Tweet-header u-cf ">
-    <div class="Tweet-brand u-floatRight ">
-      <span class="u-hiddenInNarrowEnv ">
-<a class="FollowButton follow-button profile " data-scribe="component:followbutton " href="https://twitter.com/TwitterAds " role="button " title="Follow Twitter Advertising on Twitter "><span class="FollowButton-bird "><div class="Icon Icon--twitter
-						" aria-label=" " title=" " role="presentation "></div>
+    <div class="EmbeddedTweet-tweet">
+<blockquote class="Tweet h-entry tweet subject expanded
+                   " cite="https://twitter.com/TwitterAds/status/398826034499698688" data-tweet-id="398826034499698688" data-scribe="section:subject">
+  <div class="Tweet-header u-cf">
+    <div class="Tweet-brand u-floatRight">
+      <span class="u-hiddenInNarrowEnv">
+<a class="FollowButton follow-button profile" data-scribe="component:followbutton" href="https://twitter.com/TwitterAds" role="button" title="Follow Twitter Advertising on Twitter"><span class="FollowButton-bird"><div class="Icon Icon--twitter " aria-label="" title="" role="presentation"></div>
 </span> Follow</a>
 </span>
       <span class="u-hiddenInWideEnv "><a href="https://twitter.com/download " data-scribe="element:logo "><div class="Icon Icon--twitter " aria-label="Get Twitter app " title="Get Twitter app " role="img "></div>
 </a></span>
     </div>
-
-<div class="Tweet-author u-textTruncate h-card p-author " data-scribe="component:author ">
-  <a class="Tweet-authorLink Identity u-linkBlend " data-scribe="element:user_link " href="https://twitter.com/TwitterAds " aria-label="Twitter Advertising (screen name: TwitterAds) ">
-    <span class="Tweet-authorAvatar Identity-avatar ">
-      <img class="Avatar u-photo " data-scribe="element:avatar " data-src-2x="https://pbs.twimg.com/profile_images/531882230440677376/HGgK3TBY_bigger.png " alt=" " src="https://pbs.twimg.com/profile_images/531882230440677376/HGgK3TBY_bigger.png ">
+<div class="Tweet-author u-textTruncate h-card p-author" data-scribe="component:author">
+  <a class="Tweet-authorLink Identity u-linkBlend" data-scribe="element:user_link" href="https://twitter.com/TwitterAds" aria-label="Twitter Advertising (screen name: TwitterAds)">
+    <span class="Tweet-authorAvatar Identity-avatar">
+      <img class="Avatar u-photo" data-scribe="element:avatar" data-src-2x="https://pbs.twimg.com/profile_images/531882230440677376/HGgK3TBY_bigger.png" alt="" src="https://pbs.twimg.com/profile_images/531882230440677376/HGgK3TBY_bigger.png">
     </span>
     <span class="Tweet-authorName Identity-name p-name customisable-highlight " data-scribe="element:name ">Twitter Advertising</span>
     <span class="Tweet-authorVerifiedBadge " data-scribe="element:verified_badge "><div class="Icon Icon--verified " aria-label="Verified Account " title="Verified Account " role="img "></div>
@@ -96,10 +205,9 @@
 
   </div>
 
-  <div class="Tweet-body e-entry-content " data-scribe="component:tweet ">
-    <p class="Tweet-text e-entry-title " lang="en " dir="ltr ">Connect &amp; discover: The Sunset Beach Clean Up story in. <a href="http://t.co/TRRiDAbkUR " rel="nofollow " dir="ltr " data-expanded-url="http://youtu.be/15u2G-L07x8 " class="link customisable
-						" target="_blank " title="http://youtu.be/15u2G-L07x8 " data-scribe="element:url "><span class="u-hiddenVisually ">http://</span>youtu.be/15u2G-L07x8<span class="u-hiddenVisually ">&nbsp;</span></a></p>
-    <div class="Tweet-metadata dateline ">
+  <div class="Tweet-body e-entry-content" data-scribe="component:tweet">
+    <p class="Tweet-text e-entry-title" lang="en" dir="ltr">Connect &amp; discover: The Sunset Beach Clean Up story in. <a href="http://t.co/TRRiDAbkUR" rel="nofollow" dir="ltr" data-expanded-url="http://youtu.be/15u2G-L07x8" class="link customisable" target="_blank" title="http://youtu.be/15u2G-L07x8" data-scribe="element:url"><span class="u-hiddenVisually">http://</span>youtu.be/15u2G-L07x8<span class="u-hiddenVisually">&nbsp;</span></a></p>
+    <div class="Tweet-metadata dateline">
 
 
 <a class="u-linkBlend u-url customisable-highlight long-permalink " data-datetime="2013-11-08T14:55:11+0000 " data-scribe="element:full_timestamp " href="https://twitter.com/TwitterAds/status/398826034499698688 ">
@@ -114,19 +222,23 @@
 <time class="dt-updated " datetime="2013-11-08T14:55:11+0000 " pubdate=" " title="Time posted: 08 Nov 2013, 14:55:11 (UTC) ">6:55 AM - 8 Nov 2013</time></a>
     </div>
 
-        <div class="Tweet-card ">
+        <div class="Tweet-card">
 
 
 
 
 
-<article class="MediaCard cards-multimedia customisable-border " data-scribe="component:card " data-card-name="player " data-publisher-id="10228272 " dir="ltr ">
-      <header class="MediaCard-siteUser ">
-<a class="Identity Identity--withInlineAvatar u-linkBlend customisable-hover h-card " href="https://twitter.com/YouTube " data-scribe="element:userlink "><img class="Identity-avatar Avatar u-photo " data-src-1x="https://pbs.twimg.com/profile_images/616266035423940608/lWPZNDw8_normal.png
-						" data-src-2x="https://pbs.twimg.com/profile_images/616266035423940608/lWPZNDw8_normal.png " data-scribe="element:avatar " alt=" " src="https://pbs.twimg.com/profile_images/616266035423940608/lWPZNDw8_normal.png ">
-  <span class="Identity-name p-name ">YouTube</span>
-  <span dir="ltr " class="Identity-screenName p-nickname " data-scribe="element:screen_name ">@<b>YouTube</b></span></a></header>
-  <div class="MediaCard-media ">
+<article class="MediaCard
+
+
+           cards-multimedia
+           customisable-border" data-scribe="component:card" data-card-name="player" data-publisher-id="10228272" dir="ltr">
+      <header class="MediaCard-siteUser">
+<a class="Identity Identity--withInlineAvatar u-linkBlend customisable-hover h-card" href="https://twitter.com/YouTube" data-scribe="element:userlink"><img class="Identity-avatar Avatar u-photo" data-src-1x="https://pbs.twimg.com/profile_images/616266035423940608/lWPZNDw8_normal.png" data-src-2x="https://pbs.twimg.com/profile_images/616266035423940608/lWPZNDw8_normal.png" data-scribe="element:avatar" alt="" src="https://pbs.twimg.com/profile_images/616266035423940608/lWPZNDw8_normal.png">
+  <span class="Identity-name p-name">YouTube</span>
+  <span dir="ltr" class="Identity-screenName p-nickname" data-scribe="element:screen_name">@<b>YouTube</b></span></a></header>
+  <div class="MediaCard-media">
+
 
     <div class="MediaCard-widthConstraint js-cspForcedStyle " style="max-width: 1280px; " data-style="max-width: 1280px " data-csp-fix="true ">
       <div class="MediaCard-mediaContainer js-cspForcedStyle " style="padding-bottom: 56.25%; " data-style="padding-bottom: 56.2500% " data-csp-fix="true ">
@@ -175,10 +287,10 @@
 								<p>
 									Donate For suplies To help Clean Up The Beach!
 							</p>
-                                <script type="text/javascript "
+                      <script type="text/javascript"
 
-src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js "></script>
-<script type="text/javascript "
+src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript"
 
 src="https://www.simplify.com/commerce/v1/simplify.js "></script>
 <script>
@@ -209,8 +321,7 @@ $(document).ready(function() {
 <form id="simplify-payment-form " action=" " method="POST ">
     <div>
         <label>Credit Card Number: </label>
-        <input id="cc-number " type="text " maxlength="20 " autocomplete="off " value=" "
-
+        <input id="cc-number" type="text" maxlength="20" autocomplete="off" value=""
 autofocus />
     </div>
     <div>
@@ -246,8 +357,7 @@ autofocus />
             <option value="22 ">2022</option>
         </select>
     </div>
-
-    <button id="process-payment-btn " type="submit ">Process Payment</button>
+    <button id="process-payment-btn" type="submit">Process Payment</button>
 
 
 <script>
@@ -263,11 +373,177 @@ function simplifyResponseHandler(data) {
                 fieldErrorsLength = fieldErrors.length,
                 errorList = " ";
             for (var i = 0; i < fieldErrorsLength; i++) {
-                errorList += "<div class='error'>Field: '" + fieldErrors[i].field + "' is invalid - " + fieldErrors[i].message + "</div>"; } // Display the errors $paymentForm.after(errorList); } // Re-enable the submit button $("#process-payment-btn").removeAttr("disabled"); } else { // The token
-			contains id, last4, and card type var token = data["id"]; // Insert the token into the form so it gets submitted to the server $paymentForm.append("
-			<input type='hidden' name='simplifyToken' value='" + token + "' />"); // Submit the form to the server $paymentForm.get(0).submit(); } }
-			</script>
-			<script var Simplify=r equire( "simplify-commerce"), client=S implify.getClient({ publicKey: 'sbpb_NDUxNjA2OGItYTkyOC00ZjA4LThhZmItZDJlOTVjNDI5NDZl', privateKey: '0EmF7Lbezm3yph8syaCIcvxeJOikjrRXjmYVCUZQt+F5YFFQL0ODSXAOkNtXTToq' }); client.payment.create({
-			amount : "10", token : "[TOKEN ID]", description : "payment description", reference : "7a6ef6be31", currency : "USD" }, function(errData, data){ if(errData){ console.error( "Error Message: " + errData.data.error.message); // handle the error return;
-			} console.log( "Payment Status: " + data.paymentStatus); }); </script>
-				< /body> < /html>
+
+                errorList += "<div class='error'>Field: '" + fieldErrors[i].field +
+                             "' is invalid - " + fieldErrors[i].message + "</div>";
+            }
+            // Display the errors
+            $paymentForm.after(errorList);
+        }
+        // Re-enable the submit button
+        $("#process-payment-btn").removeAttr("disabled");
+    } else {
+        // The token contains id, last4, and card type
+        var token = data["id"];
+        // Insert the token into the form so it gets submitted to the server
+        $paymentForm.append("<input type='hidden' name='simplifyToken' value='" + token + "' />");
+        // Submit the form to the server
+        $paymentForm.get(0).submit();
+    }
+}
+</script>
+<script
+var Simplify = require("simplify-commerce"),
+    client = Simplify.getClient({
+        publicKey: 'sbpb_NDUxNjA2OGItYTkyOC00ZjA4LThhZmItZDJlOTVjNDI5NDZl',
+        privateKey: '0EmF7Lbezm3yph8syaCIcvxeJOikjrRXjmYVCUZQt+F5YFFQL0ODSXAOkNtXTToq'
+    });
+
+client.payment.create({
+    amount : "10",
+    token : "[TOKEN ID]",
+    description : "payment description",
+    reference : "7a6ef6be31",
+    currency : "USD"
+}, function(errData, data){
+
+    if(errData){
+        console.error("Error Message: " + errData.data.error.message);
+        // handle the error
+        return;
+    }
+
+    console.log("Payment Status: " + data.paymentStatus);
+});
+</script>
+ <script>
+document.getElementById('sdk-js').onload = function() {
+  println('SDK Loaded');
+
+  var btn = document.createElement('input');
+      btn.setAttribute('type', 'submit');
+      btn.setAttribute('value', 'Log in');
+      btn.addEventListener('click', login);
+  document.body.appendChild(btn);
+
+
+  /* Initialize Digits SDK using your application's consumer key. */
+  Digits.init({ consumerKey: 'gmoaaZhEG88hMQUdpWHnF1IAz' })
+    .done(function(){
+      println("Digits is initialized")
+      // Digits.getLoginStatus()
+      //   .done(onLoginStatus)
+      //   .fail(onLoginStatusFailure);
+    })
+    .fail(function(){
+      println("Digits failed to initialize")
+    })
+
+
+
+  /* Launch the Login to Digits flow. */
+  function login(){
+    println('SDK Start Login flow');
+
+    Digits.logIn()
+      .done(onLogin)
+      .fail(onLoginFailure);
+  }
+
+
+  /*
+   * loginStatusResponse = {
+   *   status: string ["unknown"|"not_authorized"|"authorized"],
+   *   oauth_echo_headers: {
+   *     'X-Verify-Credentials-Authorization': string (HTTP Request header)
+   *     'X-Auth-Service-Provider': string (HTTP Request Url)
+   *   }
+   * }
+   *
+   *    unknown:          User is not logged in to Digits, may or may not have authorized your app
+   *    not_authorized:   User is logged in to Digits but has not authorized your app yet.
+   *    authorized:       User is logged in to Digits and has authorized your app.
+   *
+   *    NOTE: The OAuth Echo headers will only be returned if User has authorized your app.
+   */
+  function onLoginStatus(loginStatusResponse){
+    println('Login status: ', loginStatusResponse);
+  }
+
+  /*
+   * error = {
+   *   type: string,
+   *   message: string
+   * }
+   */
+  function onLoginStatusFailure(error){
+    println('Login status error: ', error);
+  }
+
+
+  /*
+   * loginResponse = {
+   *   oauth_echo_headers: {
+   *     'X-Verify-Credentials-Authorization': string (HTTP Request header)
+   *     'X-Auth-Service-Provider': string (HTTP Request Url)
+   *   }
+   * }
+   *
+   */
+  function onLogin(loginResponse){
+    println('oAuthEcho Headers: ', loginResponse);
+
+    // You must POST these headers to your server to safely invoke Digits' API
+    // and get the logged-in user's data. You will not be able to call it directly
+    // from the browser.
+    var oAuthHeaders = parseOAuthHeaders(loginResponse.oauth_echo_headers);
+
+    // For DEMO purposes
+    var requestUrl = ["curl '", oAuthHeaders.apiUrl, "' -H 'Authorization: ", oAuthHeaders.headers, "'"].join('');
+    println('cURL:');
+    println('', requestUrl);
+  }
+
+  /*
+   * error = {
+   *   type: string,
+   *   message: string
+   * }
+   *
+   * Note: type == 'abort' means the user closed the Login flow
+   */
+  function onLoginFailure(error){
+    println('Login error: ', error);
+  }
+
+  function parseOAuthHeaders(oAuthEchoHeaders) {
+    var credentials = oAuthEchoHeaders['X-Verify-Credentials-Authorization'];
+    var apiUrl = oAuthEchoHeaders['X-Auth-Service-Provider'];
+
+    return {
+      apiUrl: apiUrl,
+      headers: credentials
+    };
+  }
+
+  function println(text, response) {
+    var message = document.createElement('p');
+    message.innerText = text;
+
+    if (response){
+      var code = document.createElement('code');
+      code.innerText = typeof response == 'string' ? response : JSON.stringify(response);
+      message.appendChild(code);
+    }
+
+    document.body.appendChild(message);
+  }
+};
+  </script>
+
+<body>
+</body>
+</html>
+
+</body>
+</html>
