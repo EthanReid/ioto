@@ -113,7 +113,6 @@ angular.module('ioto').controller('homeController', ['$scope',
                         
                     }
                 });
-
             })
             .fail(function () {
                 /*handle the error*/
@@ -151,7 +150,23 @@ angular.module('ioto').controller('createCampaignController', ['$scope',
 			var ProjectInfo = Parse.Object.extend("ProjectPage");
 		  var project = new ProjectInfo();
 
-			//TODO: Set up form and do project.set("Stuff")
+
+		//	project.set("Tag", );
+		$scope.submit = function () {
+			var Title = document.getElementById("Title").value;
+			var Name = document.getElementById("name").value;
+			var theDate = document.getElementById("date").value;
+			var description = document.getElementById("description").value;
+			var Where = document.getElementById("place").value;
+			var Money = parseInt(document.getElementById("money").value);
+
+			console.log(Name);
+			project.set("Title", Title);
+			project.set("Description", description);
+			project.set("When", theDate);
+			project.set("Where", Where);
+			project.set("Contact", Name);
+			project.set("MoneyNeeded", Money);
 
 			project.save(null, {
 				success: function(project) {
@@ -166,6 +181,7 @@ angular.module('ioto').controller('createCampaignController', ['$scope',
 
 			});
     }
+	}
 ]);
 
 angular.module('ioto').controller('campaignController', ['$scope', '$timeout', 'campaignId',
