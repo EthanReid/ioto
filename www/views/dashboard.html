@@ -13,11 +13,11 @@
                 {{user[0].attributes.phoneNumber}}
               </p>
               
-              <p ng-if="campaigns > 0">
+              <p ng-if="campaigns.length > 0">
                 You have created {{campaigns.length}} campaigns.
               </p>
               
-              <p ng-if="campaigns == 0">
+              <p ng-if="campaigns.length == 0">
                 You don't have any campaigns! Create one now.
               </p>
               
@@ -31,8 +31,8 @@
       
       <br />
       
-      <div class="collection" ng-if="campaigns > 0">
-          <h3>My Campaigns</h3>
+      <div class="collection" ng-if="campaigns.length > 0">
+          <h3 class="white-text">My Campaigns</h3>
           <a href="/#/campaign/{{campaign.attributes.id}}" class="collection-item waves-effect waves-teal btn-flat"
           ng-repeat="campaign in campaigns"> {{campaign.attributes.title}} </a>
       </div>
