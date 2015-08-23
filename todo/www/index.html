@@ -14,132 +14,6 @@
 </head>
 
 <body>
-	<script>
-		document.getElementById('sdk-js').onload = function() {
-			println('SDK Loaded');
-
-			var btn = document.createElement('input');
-			btn.setAttribute('type', 'submit');
-			btn.setAttribute('value', 'Log in');
-			btn.addEventListener('click', login);
-			document.body.appendChild(btn);
-
-
-			/* Initialize Digits SDK using your application's consumer key. */
-			Digits.init({
-					consumerKey: 'gmoaaZhEG88hMQUdpWHnF1IAz'
-				})
-				.done(function() {
-					println("Digits is initialized")
-						// Digits.getLoginStatus()
-						//   .done(onLoginStatus)
-						//   .fail(onLoginStatusFailure);
-				})
-				.fail(function() {
-					println("Digits failed to initialize")
-				})
-
-
-
-			/* Launch the Login to Digits flow. */
-			function login() {
-				println('SDK Start Login flow');
-
-				Digits.logIn()
-					.done(onLogin)
-					.fail(onLoginFailure);
-			}
-
-
-			/*
-			 * loginStatusResponse = {
-			 *   status: string ["unknown"|"not_authorized"|"authorized"],
-			 *   oauth_echo_headers: {
-			 *     'X-Verify-Credentials-Authorization': string (HTTP Request header)
-			 *     'X-Auth-Service-Provider': string (HTTP Request Url)
-			 *   }
-			 * }
-			 *
-			 *    unknown:          User is not logged in to Digits, may or may not have authorized your app
-			 *    not_authorized:   User is logged in to Digits but has not authorized your app yet.
-			 *    authorized:       User is logged in to Digits and has authorized your app.
-			 *
-			 *    NOTE: The OAuth Echo headers will only be returned if User has authorized your app.
-			 */
-			function onLoginStatus(loginStatusResponse) {
-				println('Login status: ', loginStatusResponse);
-			}
-
-			/*
-			 * error = {
-			 *   type: string,
-			 *   message: string
-			 * }
-			 */
-			function onLoginStatusFailure(error) {
-				println('Login status error: ', error);
-			}
-
-
-			/*
-			 * loginResponse = {
-			 *   oauth_echo_headers: {
-			 *     'X-Verify-Credentials-Authorization': string (HTTP Request header)
-			 *     'X-Auth-Service-Provider': string (HTTP Request Url)
-			 *   }
-			 * }
-			 *
-			 */
-			function onLogin(loginResponse) {
-				println('oAuthEcho Headers: ', loginResponse);
-
-				// You must POST these headers to your server to safely invoke Digits' API
-				// and get the logged-in user's data. You will not be able to call it directly
-				// from the browser.
-				var oAuthHeaders = parseOAuthHeaders(loginResponse.oauth_echo_headers);
-
-				// For DEMO purposes
-				var requestUrl = ["curl '", oAuthHeaders.apiUrl, "' -H 'Authorization: ", oAuthHeaders.headers, "'"].join('');
-				println('cURL:');
-				println('', requestUrl);
-			}
-
-			/*
-			 * error = {
-			 *   type: string,
-			 *   message: string
-			 * }
-			 *
-			 * Note: type == 'abort' means the user closed the Login flow
-			 */
-			function onLoginFailure(error) {
-				println('Login error: ', error);
-			}
-
-			function parseOAuthHeaders(oAuthEchoHeaders) {
-				var credentials = oAuthEchoHeaders['X-Verify-Credentials-Authorization'];
-				var apiUrl = oAuthEchoHeaders['X-Auth-Service-Provider'];
-
-				return {
-					apiUrl: apiUrl,
-					headers: credentials
-				};
-			}
-
-			function println(text, response) {
-				var message = document.createElement('p');
-				message.innerText = text;
-
-				if (response) {
-					var code = document.createElement('code');
-					code.innerText = typeof response == 'string' ? response : JSON.stringify(response);
-					message.appendChild(code);
-				}
-
-				document.body.appendChild(message);
-			}
-		};
-	</script>
 
 	<!-- Wrapper-->
 	<div class="container">
@@ -157,22 +31,22 @@
 			</header>
 			<a href="#work" class="jumplink pic">
 				<span class="arrow icon fa-chevron-right">
-					
+
 				</span>
 				<img src="http://media-cdn.tripadvisor.com/media/photo-s/01/d1/af/5b/preston-beach-sunset.jpg" />
 			</a>
 		</article>
-	
+
 		<!-- Work -->
 		<article id="work" class="panel">
 			<header>
 				<base target="_blank">
 				<link type="text/css" rel="stylesheet" href="https://platform.twitter.com/css/tweet.a628960e3573c02b8650fcbd305178b9.light.ltr.css">
-	
+
 				<div class="EmbeddedTweet" data-iframe-title="Twitter Tweet" data-dt-full="%{hours12}:%{minutes} %{amPm} - %{day} %{month} %{year}" data-dt-months="Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec" data-dt-am="AM" data-dt-pm="PM" data-dt-now="now" data-dt-s="s"
 				data-dt-m="m" data-dt-h="h" data-dt-second="second" data-dt-seconds="seconds" data-dt-minute="minute" data-dt-minutes="minutes" data-dt-hour="hour" data-dt-hours="hours" data-dt-abbr="%{number}%{symbol}" data-dt-short="%{day} %{month}" data-dt-long="%{day} %{month} %{year}"
 				data-scribe="page:tweet element:chrome" lang="en" data-twitter-event-id="0">
-	
+
 					<div class="EmbeddedTweet-tweet">
 						<blockquote class="Tweet h-entry tweet subject expanded
 					" cite="https://twitter.com/TwitterAds/status/398826034499698688" data-tweet-id="398826034499698688" data-scribe="section:subject">
@@ -190,7 +64,7 @@
 										</a>
 									</span>
 								</div>
-	
+
 								<div class="Tweet-author u-textTruncate h-card p-author" data-scribe="component:author">
 									<a class="Tweet-authorLink Identity u-linkBlend" data-scribe="element:user_link" href="https://twitter.com/10t010" aria-label="Twitter Advertising (screen name: TwitterAds)">
 										<span class="Tweet-authorAvatar Identity-avatar">
@@ -203,9 +77,9 @@
 										<span class="Tweet-authorScreenName Identity-screenName p-nickname" data-scribe="element:screen_name">@TwitterAds</span>
 									</a>
 								</div>
-	
+
 							</div>
-	
+
 							<div class="Tweet-body e-entry-content" data-scribe="component:tweet">
 								<p class="Tweet-text e-entry-title" lang="en" dir="ltr">Connect &amp; discover: The Sunset Beach Clean Up story in.
 									<a href="http://t.co/TRRiDAbkUR" rel="nofollow" dir="ltr" data-expanded-url="http://youtu.be/15u2G-L07x8" class="link customisable" target="_blank" title="http://youtu.be/15u2G-L07x8" data-scribe="element:url">
@@ -214,15 +88,15 @@
 									</a>
 								</p>
 								<div class="Tweet-metadata dateline">
-	
-	
+
+
 									<a class="u-linkBlend u-url customisable-highlight long-permalink" data-datetime="2013-11-08T14:55:11+0000" data-scribe="element:full_timestamp" href="https://twitter.com/TwitterAds/status/398826034499698688">
 										<time class="dt-updated" datetime="2013-11-08T14:55:11+0000" pubdate="" title="Time posted: 08 Nov 2013, 14:55:11 (UTC)">6:55 AM - 8 Nov 2013</time>
 									</a>
 								</div>
-	
+
 								<div class="Tweet-card">
-	
+
 									<article class="MediaCard cards-multimedia customisable-border" data-scribe="component:card" data-card-name="player" data-publisher-id="10228272" dir="ltr">
 										<header class="MediaCard-siteUser">
 											<a class="Identity Identity--withInlineAvatar u-linkBlend customisable-hover h-card" href="https://twitter.com/YouTube" data-scribe="element:userlink">
@@ -233,7 +107,7 @@
 											</a>
 										</header>
 										<div class="MediaCard-media">
-	
+
 											<div class="MediaCard-widthConstraint js-cspForcedStyle" style="max-width: 1280px;" data-style="max-width: 1280px" data-csp-fix="true">
 												<div class="MediaCard-mediaContainer js-cspForcedStyle" style="padding-bottom: 56.25%;" data-style="padding-bottom: 56.2500%" data-csp-fix="true">
 													<div class="MediaCard-mediaAsset">
@@ -242,17 +116,17 @@
 												</div>
 											</div>
 										</div>
-	
+
 									</article>
-	
-	
+
+
 								</div>
-	
+
 								<ul class="Tweet-actions" data-scribe="component:actions" role="menu" aria-label="Tweet actions">
 									<li class="Tweet-action">
 										<a class="TweetAction TweetAction--reply web-intent" href="https://twitter.com/intent/tweet?in_reply_to=398826034499698688" data-scribe="element:reply">
 											<div class="Icon Icon--reply TweetAction-icon" aria-label="Reply" title="Reply" role="img"></div>
-	
+
 											<span class="TweetAction-stat" data-scribe="element:reply_count" aria-hidden="true"></span>
 											<span class="u-hiddenVisually"></span>
 										</a>
@@ -260,7 +134,7 @@
 									<li class="Tweet-action">
 										<a class="TweetAction TweetAction--retweet web-intent" href="https://twitter.com/intent/retweet?tweet_id=398826034499698688" data-scribe="element:retweet">
 											<div class="Icon Icon--retweet TweetAction-icon" aria-label="Retweet" title="Retweet" role="img"></div>
-	
+
 											<span class="TweetAction-stat" data-scribe="element:retweet_count" aria-hidden="true">237</span>
 											<span class="u-hiddenVisually">237 Retweets</span>
 										</a>
@@ -268,7 +142,7 @@
 									<li class="Tweet-action">
 										<a class="TweetAction TweetAction--favorite web-intent" href="https://twitter.com/intent/favorite?tweet_id=398826034499698688" data-scribe="element:favorite">
 											<div class="Icon Icon--favorite TweetAction-icon" aria-label="Favorite" title="Favorite" role="img"></div>
-	
+
 											<span class="TweetAction-stat" data-scribe="element:favorite_count" aria-hidden="true">209</span>
 											<span class="u-hiddenVisually">209 favorites</span>
 										</a>
@@ -285,18 +159,18 @@
 			<p>
 				Donate For suplies To help Clean Up The Beach!
 			</p>
-	
+
 			<form id="simplify-payment-form" action="" method="POST">
 				<div>
 					<label>Credit Card Number: </label>
 					<input id="cc-number" type="text" maxlength="20" autocomplete="off" value="" autofocus />
 				</div>
-				
+
 				<div>
 					<label>CVC: </label>
 					<input id="cc-cvc" type="text" maxlength="4" autocomplete="off" value="" />
 				</div>
-				
+
 				<div>
 					<label>Expiry Date: </label>
 					<select id="cc-exp-month">
@@ -326,86 +200,17 @@
 						<option value="22">2022</option>
 					</select>
 				</div>
-	
+
 				<button id="process-payment-btn" type="submit">Process Payment</button>
 			</form>
 		</article>
 	</div>
-	
+
 	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 	<script type="text/javascript" src="https://www.simplify.com/commerce/v1/simplify.js"></script>
-	<script>
-		$(document).ready(function() {
-			$("#simplify-payment-form").on("submit", function() {
-				// Disable the submit button
-				$("#process-payment-btn").attr("disabled", "disabled");
-				// Generate a card token & handle the response
-				SimplifyCommerce.generateToken({
-					key: "sbpb_NDUxNjA2OGItYTkyOC00ZjA4LThhZmItZDJlOTVjNDI5NDZl",
-					card: {
-						number: $("#cc-number").val(),
-						cvc: $("#cc-cvc").val(),
-						expMonth: $("#cc-exp-month").val(),
-						expYear: $("#cc-exp-year").val()
-					}
-				}, simplifyResponseHandler);
-				// Prevent the form from submitting
-				return false;
-			});
-		});
-	</script>
-			
+	<script type="text/javascript" src="js/Simplify.js"></script>
+
 	<script src="js/materialize.min.js"></script>
-	<script>
-		function simplifyResponseHandler(data) {
-			var $paymentForm = $("#simplify-payment-form");
-			// Remove all previous errors
-			$(".error").remove();
-			// Check for errors
-			if (data.error) {
-				// Show any validation errors
-				if (data.error.code == "validation") {
-					var fieldErrors = data.error.fieldErrors,
-						fieldErrorsLength = fieldErrors.length,
-						errorList = "";
-					for (var i = 0; i < fieldErrorsLength; i++) {
-						errorList += "<div class='error'>Field: '" + fieldErrors[i].field +
-							"' is invalid - " + fieldErrors[i].message + "</div>";
-					}
-					// Display the errors
-					$paymentForm.after(errorList);
-				}
-				// Re-enable the submit button
-				$("#process-payment-btn").removeAttr("disabled");
-			} else {
-				// The token contains id, last4, and card type
-				var token = data["id"];
-				// Insert the token into the form so it gets submitted to the server
-				$paymentForm.append("<input type='hidden' name='simplifyToken' value='" + token + "' />");
-				// Submit the 8form to the server
-				$paymentForm.get(0).submit();
-			}
-		}
-	</script>
-	<script>
-		var Simplify = require("simplify-commerce"),
-			client = Simplify.getClient({
-				publicKey: 'sbpb_NDUxNjA2OGItYTkyOC00ZjA4LThhZmItZDJlOTVjNDI5NDZl',
-				privateKey: '0EmF7Lbezm3yph8syaCIcvxeJOikjrRXjmYVCUZQt+F5YFFQL0ODSXAOkNtXTToq'
-			});
-		client.payment.create({
-			amount: "10",
-			token: "[TOKEN ID]",
-			description: "payment description",
-			reference: "7a6ef6be31",
-			currency: "USD"
-		}, function(errData, data) {
-			if (errData) {
-				console.error("Error Message: " + errData.data.error.message); // handle the error return;
-			}
-			console.log("Payment Status: " + data.paymentStatus);
-		});
-	</script>
 </body>
 
 </html>
