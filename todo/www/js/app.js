@@ -74,7 +74,6 @@ angular.module('ioto').factory('iotoFactory',
 angular.module('ioto').controller('indexController', ['$scope', '$timeout',
   function ($scope, $timeout) {
       /* Initialize Digits for Web using your application's consumer key that Fabric generated */
-      console.log(Digits);
       Digits.init({ consumerKey: 'QySjPEFPolsnBA00M4aIpOi27' });
 	}
 ]);
@@ -94,8 +93,9 @@ angular.module('ioto').controller('homeController', ['$scope',
                     type: 'POST',
                     url: '/digits',
                     data: oAuthHeaders,
-                    success: function () {
-                        console.log('success!');
+                    success: function (res) {
+                        console.log(res);
+                        
                     }
                 });
             })
