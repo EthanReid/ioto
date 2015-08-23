@@ -37,23 +37,6 @@ angular.module('ioto').config(['$routeProvider',
             controller: 'campaignsController',
             activetab: 'home'
         })
-        .when('/digits', {
-            templateUrl: 'views/digits.html',
-            controller: 'digitsController',
-            resolve: {
-                'apiUrl': [ '$route',
-                function($route) {
-                    return $route.current.params.apiUrl;
-                    // return campaignFactory.getCampaign($route.current.params.id)
-                    // .then(function(res){
-                    //     return res.data;
-                    // })
-                    // .catch(function(error){
-                    //     return null;
-                    // });
-                }
-            ]}
-        })
         .when('/campaign/:id', {
             templateUrl: 'views/campaign.html',
             controller: 'campaignController',
@@ -89,9 +72,10 @@ angular.module('ioto').factory('iotoFactory',
 );
 
 angular.module('ioto').controller('indexController', ['$scope', '$timeout',
-	function ($scope, $timeout) {
-        /* Initialize Digits for Web using your application's consumer key that Fabric generated */
-        Digits.init({ consumerKey: 'QySjPEFPolsnBA00M4aIpOi27' });
+  function ($scope, $timeout) {
+      /* Initialize Digits for Web using your application's consumer key that Fabric generated */
+      console.log(Digits);
+      Digits.init({ consumerKey: 'QySjPEFPolsnBA00M4aIpOi27' });
 	}
 ]);
 
@@ -108,10 +92,10 @@ angular.module('ioto').controller('homeController', ['$scope',
                 //setDigitsButton('Signing In…');
                 $.ajax({
                     type: 'POST',
-                    url: '/#/digits',
+                    url: '/digits',
                     data: oAuthHeaders,
                     success: function () {
-
+                        console.log('success!');
                     }
                 });
             })
@@ -240,6 +224,17 @@ angular.module('ioto').controller('dashboardController', ['$scope', '$timeout', 
             console.log(object, error);
           }
         });
+        
+        console.log(SimplifyCommerce);
+        SimplifyCommerce.hostedPayments(
+            function(response) {
+                // response handler
+            },
+            {
+                color: "#12B830"
+            }
+        );
+        
       }
 
     ]);
@@ -269,12 +264,3 @@ angular.module('ioto').controller('dashboardController', ['$scope', '$timeout', 
 
       }
     ]);
-
-angular.module('ioto').controller('digitsController', ['$scope', '$timeout', 'apiUrl',
-    function ($scope, $timeout, apiUrl) {
-        console.log(apiUrl);
-
-
-
-    }
-]);

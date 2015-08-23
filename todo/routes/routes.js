@@ -2,7 +2,11 @@ var express = require('express'),
 	request = require('request'),
 	nconf = require('nconf'),
 	url = require('url'),
-	router = express.Router();
+	router = express().route;
+
+router.get('/test', function () {
+	console.log('test');
+});
 
 router.post('/digits', function (req, res) {
 	var apiUrl = req.body['apiUrl']
