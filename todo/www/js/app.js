@@ -1,202 +1,229 @@
 angular.module('ioto', [
-	'ionic',
-    'ngRoute'
+  'ionic',
+  'ngRoute'
 ]);
 
 angular.module('ioto').config(['$routeProvider',
-    function ($routeProvider) {
-        $routeProvider
-        .when('/dashboard/:id', {
-            templateUrl: 'views/dashboard.html',
-            controller: 'dashboardController',
-            activetab: 'dashboard',
-            resolve: {
-                'user': [ '$route',
-                function($route) {
-                    return {
-                        id: $route.current.params.id
-                    };
-                    // return userFactory.getUser($route.current.params.id)
-                    // .then(function(res){
-                    //     return res.data;
-                    // })
-                    // .catch(function(error){
-                    //     return null;
-                    // });
-                }
-            ]}
-        })
-        .when('/create-campaign', {
-            templateUrl: 'views/createCampaign.html',
-            controller: 'createCampaignController',
-            activetab: 'dashboard'
-        })
-        .when('/campaigns', {
-            templateUrl: 'views/campaigns.html',
-            controller: 'campaignsController',
-            activetab: 'home'
-        })
-        .when('/campaign/:id', {
-            templateUrl: 'views/campaign.html',
-            controller: 'campaignController',
-            activetab: 'dashboard',
-            resolve: {
-                'campaignId': [ '$route',
-                function($route) {
-                    return {
-                        id: $route.current.params.id
-                    };
-                    // return campaignFactory.getCampaign($route.current.params.id)
-                    // .then(function(res){
-                    //     return res.data;
-                    // })
-                    // .catch(function(error){
-                    //     return null;
-                    // });
-                }
-            ]}
-        })
-        .when('/', {
-          templateUrl: 'views/home.html',
-          controller: 'homeController',
-          activetab: 'home'
-        })
-	}
+  function($routeProvider) {
+    $routeProvider
+      .when('/dashboard/:id', {
+        templateUrl: 'views/dashboard.html',
+        controller: 'dashboardController',
+        activetab: 'dashboard',
+        resolve: {
+          'userId': ['$route',
+            function($route) {
+              return {
+                id: $route.current.params.id
+              };
+              // return userFactory.getUser($route.current.params.id)
+              // .then(function(res){
+              //     return res.data;
+              // })
+              // .catch(function(error){
+              //     return null;
+              // });
+            }
+          ]
+        }
+      })
+      .when('/create-campaign', {
+        templateUrl: 'views/createCampaign.html',
+        controller: 'createCampaignController',
+        activetab: 'dashboard'
+      })
+      .when('/campaigns', {
+        templateUrl: 'views/campaigns.html',
+        controller: 'campaignsController',
+        activetab: 'home'
+      })
+      .when('/campaign/:id', {
+        templateUrl: 'views/campaign.html',
+        controller: 'campaignController',
+        activetab: 'dashboard',
+        resolve: {
+          'campaignId': ['$route',
+            function($route) {
+              return {
+                id: $route.current.params.id
+              };
+              // return campaignFactory.getCampaign($route.current.params.id)
+              // .then(function(res){
+              //     return res.data;
+              // })
+              // .catch(function(error){
+              //     return null;
+              // });
+            }
+          ]
+        }
+      })
+      .when('/', {
+        templateUrl: 'views/home.html',
+        controller: 'homeController',
+        activetab: 'home'
+      })
+  }
 ]);
 
 angular.module('ioto').factory('iotoFactory',
-	function () {
+  function() {
 
-	}
+  }
 );
 
 angular.module('ioto').controller('indexController', ['$scope', '$timeout', '$ionicModal', '$ionicSideMenuDelegate',
-	function ($scope, $timeout, $ionicModal, $ionicSideMenuDelegate) {
-        /* Initialize Digits for Web using your application's consumer key that Fabric generated */
-            Digits.init({ consumerKey: 'QySjPEFPolsnBA00M4aIpOi27' });
-	}
+  function($scope, $timeout, $ionicModal, $ionicSideMenuDelegate) {
+    /* Initialize Digits for Web using your application's consumer key that Fabric generated */
+    Digits.init({
+      consumerKey: 'QySjPEFPolsnBA00M4aIpOi27'
+    });
+  }
 ]);
 
 angular.module('ioto').controller('homeController', ['$scope',
-    function ($scope) {
-        /* Launch the Login to Digits flow. */
+  function($scope) {
+    /* Launch the Login to Digits flow. */
 
-				$scope.login = function () {
-        Digits.logIn()
-            .done(function () {
-                //Open Dashboard
-            })
-            .fail(function () {
-                /*handle the error*/
+    $scope.login = function() {
+      Digits.logIn()
+        .done(function() {
+          //Open Dashboard
+        })
+        .fail(function() {
+          /*handle the error*/
+        });
+    }
+  }
+]);
+
+angular.module('ioto').controller('dashboardController', ['$scope', '$timeout', 'userId',
+      function($scope, $timeout, userId) {
+        Parse.$ = jQuery;
+
+        Parse.initialize("wpvbhNsxxZam6HYa63vmudxBgJrasHXLq7WTxkKH", "WhODpEkC35r18jewjzrpw22KJwxLZJxbGQQcyxST");
+        var CampaignInfo = Parse.Object.extend("ProjectPage");
+        var query = new Parse.Query(CampaignInfo);
+
+				console.log(userId);
+				console.log(userId.id);
+        query.equalTo('userId', userId.id)
+						 .find({
+          success: function(campaigns) {
+						console.log(campaigns);
+						$timeout(function() {
+							$scope.campaigns = campaigns;
+
             });
+          },
+          error: function(object, error) {
+            console.log(object, error);
+          }
+        });
+      }
+
+    ]);
+
+
+    angular.module('ioto').controller('createCampaignController', ['$scope',
+      function($scope) {
+        Parse.$ = jQuery;
+
+        Parse.initialize("wpvbhNsxxZam6HYa63vmudxBgJrasHXLq7WTxkKH", "WhODpEkC35r18jewjzrpw22KJwxLZJxbGQQcyxST");
+        var ProjectInfo = Parse.Object.extend("ProjectPage");
+        var project = new ProjectInfo();
+
+
+        //	project.set("Tag", );
+        $scope.submit = function() {
+          var userName = document.getElementById("userId").value;
+					var Title = document.getElementById("Title").value;
+          var Name = document.getElementById("name").value;
+          var theDate = document.getElementById("date").value;
+          var description = document.getElementById("description").value;
+          var Where = document.getElementById("place").value;
+          var Money = parseInt(document.getElementById("money").value);
+
+          console.log(Name);
+          project.set("title", Title);
+          project.set("description", description);
+          project.set("when", theDate);
+          project.set("where", Where);
+          project.set("contact", Name);
+          project.set("moneyNeeded", Money);
+          project.set("userId", userName);
+          project.save(null, {
+            success: function(project) {
+              // Execute any logic that should take place after the object is saved.
+              alert('New object created with objectId: ' + project.id);
+            },
+            error: function(project, error) {
+              // Execute any logic that should take place if the save fails.
+              // error is a Parse.Error with an error code and message.
+              console.log('Failed to create new object, with error code: ' + error.message);
+            }
+
+          });
         }
-    }
-]);
+      }
+    ]);
 
-angular.module('ioto').controller('dashboardController', ['$scope',
-    function ($scope) {
+    angular.module('ioto').controller('campaignController', ['$scope', '$timeout', 'campaignId',
+      function($scope, $timeout, campaignId) {
+        console.log(campaignId);
+        $scope.campaign = {
 
-    }
-]);
+        };
+        Parse.$ = jQuery;
 
-angular.module('ioto').controller('createCampaignController', ['$scope',
-    function ($scope) {
-			Parse.$ = jQuery;
+        Parse.initialize("wpvbhNsxxZam6HYa63vmudxBgJrasHXLq7WTxkKH", "WhODpEkC35r18jewjzrpw22KJwxLZJxbGQQcyxST");
+        var CampaignInfo = Parse.Object.extend("ProjectPage");
+        var query = new Parse.Query(CampaignInfo);
+        query.get(campaignId.id, {
+          success: function(campaign) {
+            $timeout(function() {
+              $scope.campaign = {
+                title: campaign.get("title"),
+                description: campaign.get("description"),
+                time: campaign.get("when"),
+                place: campaign.get("where"),
+                host: campaign.get("contact"),
+                money: campaign.get("moneyNeeded"),
+                tag: campaign.get("tag")
+              }
 
-			Parse.initialize("wpvbhNsxxZam6HYa63vmudxBgJrasHXLq7WTxkKH", "WhODpEkC35r18jewjzrpw22KJwxLZJxbGQQcyxST");
-			var ProjectInfo = Parse.Object.extend("ProjectPage");
-		  var project = new ProjectInfo();
+            });
+          },
+          error: function(object, error) {
+            console.log(object, error);
+          }
+        });
+      }
 
+    ]);
 
-		//	project.set("Tag", );
-		$scope.submit = function () {
-			var Title = document.getElementById("Title").value;
-			var Name = document.getElementById("name").value;
-			var theDate = document.getElementById("date").value;
-			var description = document.getElementById("description").value;
-			var Where = document.getElementById("place").value;
-			var Money = parseInt(document.getElementById("money").value);
+    angular.module('ioto').controller('campaignsController', ['$scope', '$timeout',
+      function($scope, $timeout) {
 
-			console.log(Name);
-			project.set("Title", Title);
-			project.set("Description", description);
-			project.set("When", theDate);
-			project.set("Where", Where);
-			project.set("Contact", Name);
-			project.set("MoneyNeeded", Money);
+        $scope.campaigns = [];
+        Parse.$ = jQuery;
 
-			project.save(null, {
-				success: function(project) {
-					// Execute any logic that should take place after the object is saved.
-					console.log('New object created with objectId: ' + project.id);
-				},
-				error: function(project, error) {
-					// Execute any logic that should take place if the save fails.
-					// error is a Parse.Error with an error code and message.
-					console.log('Failed to create new object, with error code: ' + error.message);
-				}
+        Parse.initialize("wpvbhNsxxZam6HYa63vmudxBgJrasHXLq7WTxkKH", "WhODpEkC35r18jewjzrpw22KJwxLZJxbGQQcyxST");
+        var CampaignInfo = Parse.Object.extend("ProjectPage");
+        var query = new Parse.Query(CampaignInfo);
+        query.find({
+          success: function(campaigns) {
+            $timeout(function() {
+              $scope.campaigns = campaigns;
 
-			});
-    }
-	}
-]);
+              console.log($scope.campaigns);
 
-angular.module('ioto').controller('campaignController', ['$scope', '$timeout', 'campaignId',
-    function ($scope, $timeout, campaignId) {
-			console.log(campaignId);
-			$scope.campaign = {
+            });
+          },
+          error: function(object, error) {
+            console.log(object, error);
+          }
+        });
 
-			};
-			Parse.$ = jQuery;
-
-			Parse.initialize("wpvbhNsxxZam6HYa63vmudxBgJrasHXLq7WTxkKH", "WhODpEkC35r18jewjzrpw22KJwxLZJxbGQQcyxST");
-			var CampaignInfo = Parse.Object.extend("ProjectPage");
-			var query = new Parse.Query(CampaignInfo);
-			query.get(campaignId.id, {
-				success: function(campaign) {
-					$timeout(function() {
-						$scope.campaign = {
-							title: campaign.get("Title"),
-							description: campaign.get("Description"),
-							time: campaign.get("When"),
-							place: campaign.get("Where"),
-							host: campaign.get("Contact"),
-							money: campaign.get("MoneyNeeded"),
-							tag: campaign.get("Tag")
-						}
-
-					});
-				},
-				error: function(object, error) {
-					console.log(object, error);
-				}
-			});
-    }
-
-]);
-
-angular.module('ioto').controller('campaignsController', ['$scope', '$timeout',
-    function ($scope, $timeout) {
-
-			$scope.campaigns = [];
-			Parse.$ = jQuery;
-
-			Parse.initialize("wpvbhNsxxZam6HYa63vmudxBgJrasHXLq7WTxkKH", "WhODpEkC35r18jewjzrpw22KJwxLZJxbGQQcyxST");
-			var CampaignInfo = Parse.Object.extend("ProjectPage");
-			var query = new Parse.Query(CampaignInfo);
-			query.find({
-				success: function(campaigns) {
-					$timeout(function() {
-						$scope.campaigns = campaigns;
-
-console.log($scope.campaigns);
-
-					});
-				},
-				error: function(object, error) {
-					console.log(object, error);
-				}
-			});
-
-    }
-]);
+      }
+    ]);
