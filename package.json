@@ -21,6 +21,9 @@
     "gulp-util": "^2.2.14",
     "shelljs": "^0.3.0"
   },
+  "scripts": {
+      "postinstall": "./node_modules/bower/bin/bower install"
+  },
   "cordovaPlugins": [
     "cordova-plugin-device",
     "cordova-plugin-console",
