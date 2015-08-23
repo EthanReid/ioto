@@ -241,7 +241,7 @@ angular.module('ioto').controller('dashboardController', ['$scope', '$timeout', 
             console.log(object, error);
           }
         });
-        
+
         console.log(SimplifyCommerce);
         SimplifyCommerce.hostedPayments(
             function(response) {
@@ -251,7 +251,7 @@ angular.module('ioto').controller('dashboardController', ['$scope', '$timeout', 
                 color: "#12B830"
             }
         );
-        
+
       }
 
     ]);
