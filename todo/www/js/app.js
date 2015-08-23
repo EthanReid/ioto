@@ -73,20 +73,19 @@ angular.module('ioto').factory('iotoFactory',
 angular.module('ioto').controller('indexController', ['$scope', '$timeout', '$ionicModal', '$ionicSideMenuDelegate',
 	function ($scope, $timeout, $ionicModal, $ionicSideMenuDelegate) {
         /* Initialize Digits for Web using your application's consumer key that Fabric generated */
-        document.getElementById('digits-sdk').onload = function() {
             Digits.init({ consumerKey: 'QySjPEFPolsnBA00M4aIpOi27' });
-        };
 	}
 ]);
 
 angular.module('ioto').controller('homeController', ['$scope',
     function ($scope) {
         /* Launch the Login to Digits flow. */
-        $scope.login = function (event) {
+
+				$scope.login = function () {
         Digits.logIn()
             .done(function () {
                 /*handle the response*/
-            }) 
+            })
             .fail(function () {
                 /*handle the error*/
             });
