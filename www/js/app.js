@@ -304,8 +304,8 @@ angular.module('ioto').controller('dashboardController', ['$scope', '$timeout', 
         * 'X-Auth-Service-Provider'
         */
         function parseOAuthHeaders(oAuthEchoHeaders) {
-            var credentials = oAuthEchoHeaders['X-Verify-Credentials-Authorization'];
-            var apiUrl = oAuthEchoHeaders['X-Auth-Service-Provider'];
+            var credentials = oAuthEchoHeaders['oauth_echo_header'];
+            var apiUrl = oAuthEchoHeaders['oauth_echo_service'];
 
             return {
                 apiUrl: apiUrl,
@@ -325,7 +325,7 @@ angular.module('ioto').controller('dashboardController', ['$scope', '$timeout', 
 
                   $timeout(function() {
                     $scope.user = user;
-                    console.log($scope.user);
+                    console.log($scope.user[0]);
                   });
                 } else {
                   // user not in db, create record
@@ -345,7 +345,6 @@ angular.module('ioto').controller('dashboardController', ['$scope', '$timeout', 
 
         //	project.set("Tag", );
         $scope.submit = function() {
-          var userName = document.getElementById("userId").value;
 					var Title = document.getElementById("Title").value;
           var Name = document.getElementById("name").value;
           var theDate = document.getElementById("date").value;
@@ -359,7 +358,7 @@ angular.module('ioto').controller('dashboardController', ['$scope', '$timeout', 
           project.set("where", Where);
           project.set("contact", Name);
           project.set("moneyNeeded", Money);
-          project.set("userId", userName);
+          project.set("userId", $scope.user[0].id);
           project.save(null, {
             success: function(project) {
               // Execute any logic that should take place after the object is saved.
