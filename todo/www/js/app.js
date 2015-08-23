@@ -36,6 +36,23 @@ angular.module('ioto').config(['$routeProvider',
             controller: 'campaignsController',
             activetab: 'home'
         })
+        .when('/digits', {
+            templateUrl: 'views/digits.html',
+            controller: 'digitsController',
+            resolve: {
+                'apiUrl': [ '$route',
+                function($route) {
+                    return $route.current.params.apiUrl;
+                    // return campaignFactory.getCampaign($route.current.params.id)
+                    // .then(function(res){
+                    //     return res.data;
+                    // })
+                    // .catch(function(error){
+                    //     return null;
+                    // });
+                }
+            ]}
+        })
         .when('/campaign/:id', {
             templateUrl: 'views/campaign.html',
             controller: 'campaignController',
@@ -70,25 +87,52 @@ angular.module('ioto').factory('iotoFactory',
 	}
 );
 
-angular.module('ioto').controller('indexController', ['$scope', '$timeout', '$ionicModal', '$ionicSideMenuDelegate',
-	function ($scope, $timeout, $ionicModal, $ionicSideMenuDelegate) {
+angular.module('ioto').controller('indexController', ['$scope', '$timeout',
+	function ($scope, $timeout) {
         /* Initialize Digits for Web using your application's consumer key that Fabric generated */
-            Digits.init({ consumerKey: 'QySjPEFPolsnBA00M4aIpOi27' });
+        Digits.init({ consumerKey: 'QySjPEFPolsnBA00M4aIpOi27' });
 	}
 ]);
 
 angular.module('ioto').controller('homeController', ['$scope',
     function ($scope) {
         /* Launch the Login to Digits flow. */
-
-				$scope.login = function () {
-        Digits.logIn()
-            .done(function () {
+        $scope.login = function () {
+            Digits.logIn()
+            .done(function (loginResponse) {
                 /*handle the response*/
+                console.log('Digits login succeeded.');
+                var oAuthHeaders = parseOAuthHeaders(loginResponse.oauth_echo_headers);
+                console.log(oAuthHeaders);
+                //setDigitsButton('Signing In…');
+                $.ajax({
+                    type: 'POST',
+                    url: '/#/digits',
+                    data: oAuthHeaders,
+                    success: function () {
+                        
+                    }
+                });
+
             })
             .fail(function () {
                 /*handle the error*/
             });
+        }
+        
+        /**
+        * Parse OAuth Echo Headers:
+        * 'X-Verify-Credentials-Authorization'
+        * 'X-Auth-Service-Provider'
+        */
+        function parseOAuthHeaders(oAuthEchoHeaders) {
+            var credentials = oAuthEchoHeaders['X-Verify-Credentials-Authorization'];
+            var apiUrl = oAuthEchoHeaders['X-Auth-Service-Provider'];
+            
+            return {
+                apiUrl: apiUrl,
+                credentials: credentials
+            };
         }
     }
 ]);
@@ -180,6 +224,15 @@ console.log($scope.campaigns);
 					console.log(object, error);
 				}
 			});
+
+    }
+]);
+
+angular.module('ioto').controller('digitsController', ['$scope', '$timeout', 'apiUrl',
+    function ($scope, $timeout, apiUrl) {
+        console.log(apiUrl);
+        
+
 
     }
 ]);
