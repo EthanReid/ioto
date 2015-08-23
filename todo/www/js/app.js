@@ -82,10 +82,14 @@ angular.module('ioto').controller('indexController', ['$scope', '$timeout', '$io
 angular.module('ioto').controller('homeController', ['$scope',
     function ($scope) {
         /* Launch the Login to Digits flow. */
-        $scope.login = function onLoginButtonClick(event) {
+        $scope.login = function (event) {
         Digits.logIn()
-            .done(onLogin) /*handle the response*/
-            .fail(onLoginFailure);
+            .done(function () {
+                /*handle the response*/
+            }) 
+            .fail(function () {
+                /*handle the error*/
+            });
         }
     }
 ]);
