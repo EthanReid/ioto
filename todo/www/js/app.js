@@ -144,7 +144,7 @@ angular.module('ioto').controller('campaignController', ['$scope',
 			var host = document.getElementById("who");
 
     }
-		
+		$title.text(pTitle);
 ]);
 
 angular.module('ioto').controller('campaignsController', ['$scope',
