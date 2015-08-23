@@ -1,14 +1,9 @@
 angular.module('ioto', [
-	'ionic'
+	'ionic',
+    'ngRoute'
 ]);
 
-angular.module('ioto').factory('iotoFactory',
-	function () {
-
-	}
-);
-
-angular.module('owm').config(['$routeProvider', '$httpProvider',
+angular.module('ioto').config(['$routeProvider', '$httpProvider',
     function ($routeProvider, $httpProvider) {
         $httpProvider.interceptors.push('httpInterceptorFactory');
 
@@ -42,7 +37,7 @@ angular.module('owm').config(['$routeProvider', '$httpProvider',
         })
         .when('/campaign/:id', {
             templateUrl: 'views/create-campaign.html',
-            controller: 'createCampaignController',
+            controller: 'campaignController',
             activetab: 'dashboard',
             resolve: {
                 'campaign': [ '$route', 'campaignFactory',
@@ -66,10 +61,46 @@ angular.module('owm').config(['$routeProvider', '$httpProvider',
 	}
 ]);
 
+angular.module('ioto').factory('iotoFactory',
+	function () {
+		
+	}
+);
+
 angular.module('ioto').controller('indexController', ['$scope', '$timeout', '$ionicModal', '$ionicSideMenuDelegate',
 	function ($scope, $timeout, $ionicModal, $ionicSideMenuDelegate) {
 
 
 
 	}
+]);
+
+angular.module('ioto').controller('homeController', ['$scope',
+    function ($scope) {
+        
+    }
+]);
+
+angular.module('ioto').controller('dashboardController', ['$scope',
+    function ($scope) {
+        
+    }
+]);
+
+angular.module('ioto').controller('createCampaignController', ['$scope',
+    function ($scope) {
+        
+    }
+]);
+
+angular.module('ioto').controller('campaignController', ['$scope',
+    function ($scope) {
+        
+    }
+]);
+
+angular.module('ioto').controller('campaignsController', ['$scope',
+    function ($scope) {
+        
+    }
 ]);

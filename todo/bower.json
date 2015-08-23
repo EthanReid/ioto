@@ -1,7 +1,13 @@
 {
-  "name": "HelloIonic",
+  "name": "IOTO",
   "private": "true",
   "devDependencies": {
     "ionic": "driftyco/ionic-bower#1.0.1"
+  },
+  "resolutions": {
+    "angular": "1.4.4"
+  },
+  "dependencies": {
+    "angular-route": "~1.4.4"
   }
 }
