@@ -3,10 +3,8 @@ angular.module('ioto', [
     'ngRoute'
 ]);
 
-angular.module('ioto').config(['$routeProvider', '$httpProvider',
-    function ($routeProvider, $httpProvider) {
-        $httpProvider.interceptors.push('httpInterceptorFactory');
-
+angular.module('ioto').config(['$routeProvider',
+    function ($routeProvider) {
         $routeProvider
         .when('/dashboard/:id', {
             templateUrl: 'views/dashboard.html',
