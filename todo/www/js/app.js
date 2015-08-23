@@ -138,16 +138,14 @@ angular.module('ioto').controller('dashboardController', ['$scope', '$timeout', 
 						console.log(campaigns);
 						$timeout(function() {
 							$scope.campaigns = campaigns;
-							$scope.goToEvent = function() {
-								$location.path('/campaign/' + campaigns.objectId);
-							}
+
             });
           },
           error: function(object, error) {
             console.log(object, error);
           }
         });
-
+				
       }
 
     ]);
@@ -227,7 +225,7 @@ angular.module('ioto').controller('dashboardController', ['$scope', '$timeout', 
             console.log(object, error);
           }
         });
-        
+
         console.log(SimplifyCommerce);
         SimplifyCommerce.hostedPayments(
             function(response) {
@@ -237,7 +235,7 @@ angular.module('ioto').controller('dashboardController', ['$scope', '$timeout', 
                 color: "#12B830"
             }
         );
-        
+
       }
 
     ]);
