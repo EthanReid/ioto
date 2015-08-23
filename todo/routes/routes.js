@@ -4,11 +4,6 @@ var express = require('express'),
 	url = require('url'),
 	router = express.Router();
 
-router.get('/test', function () {
-	console.log('here');
-	return;
-});
-
 router.post('/digits', function (req, res) {
 	var apiUrl = req.body['apiUrl']
 	var credentials = req.body['credentials']
@@ -16,13 +11,14 @@ router.post('/digits', function (req, res) {
 	var messages = [];
 	
 	// Verify the OAuth consumer key.
-	if (credentials.indexOf('oauth_consumer_key="' + nconf.get('DIGITS_CONSUMER_KEY') + '"') == -1) {
+	if (credentials.indexOf('oauth_consumer_key="WCrqxqemf1XkOhHx1JhRzaTcV"') == -1) {
 		verified = false;
 		messages.push('The Digits API key does not match.');
 	}
 	
 	// Verify the hostname.
 	var hostname = url.parse(req.body.apiUrl).hostname;
+	
 	if (hostname != 'api.digits.com' && hostname != 'api.twitter.com') {
 		verified = false;
 		messages.push('Invalid API hostname.');

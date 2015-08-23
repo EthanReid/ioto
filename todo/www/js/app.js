@@ -74,7 +74,13 @@ angular.module('ioto').factory('iotoFactory',
 angular.module('ioto').controller('indexController', ['$scope', '$timeout',
   function ($scope, $timeout) {
       /* Initialize Digits for Web using your application's consumer key that Fabric generated */
-      Digits.init({ consumerKey: 'QySjPEFPolsnBA00M4aIpOi27' });
+      Digits.init({ consumerKey: 'WCrqxqemf1XkOhHx1JhRzaTcV' })
+        .done(function(res) {
+          console.log('digits initialized', res);
+        })
+        .fail(function(err) {
+          console.log('digits failed', err);
+        });
 	}
 ]);
 
@@ -85,7 +91,7 @@ angular.module('ioto').controller('homeController', ['$scope',
             Digits.logIn()
             .done(function (loginResponse) {
                 /*handle the response*/
-                console.log('Digits login succeeded.');
+                console.log('Digits Done.');
                 var oAuthHeaders = parseOAuthHeaders(loginResponse.oauth_echo_headers);
                 console.log(oAuthHeaders);
                 //setDigitsButton('Signing In…');
@@ -117,6 +123,14 @@ angular.module('ioto').controller('homeController', ['$scope',
                 apiUrl: apiUrl,
                 credentials: credentials
             };
+        }
+        
+        function getUserById(id) {
+          
+        }
+        
+        function addUser() {
+          
         }
     }
 
