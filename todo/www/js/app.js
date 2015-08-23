@@ -27,7 +27,7 @@ angular.module('ioto').config(['$routeProvider',
             ]}
         })
         .when('/dashboard/create-campaign', {
-            templateUrl: 'views/create-campaign.html',
+            templateUrl: 'views/createCampaign.html',
             controller: 'createCampaignController',
             activetab: 'dashboard'
         })
@@ -37,7 +37,7 @@ angular.module('ioto').config(['$routeProvider',
             activetab: 'home'
         })
         .when('/campaign/:id', {
-            templateUrl: 'views/create-campaign.html',
+            templateUrl: 'views/campaign.html',
             controller: 'campaignController',
             activetab: 'dashboard',
             resolve: {
