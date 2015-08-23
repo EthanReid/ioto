@@ -135,7 +135,7 @@ angular.module('ioto').controller('homeController', ['$scope',
             };
         }
     }
-  
+
 ]);
 
 angular.module('ioto').controller('dashboardController', ['$scope', '$timeout', 'userId',
@@ -166,8 +166,8 @@ angular.module('ioto').controller('dashboardController', ['$scope', '$timeout', 
     ]);
 
 
-    angular.module('ioto').controller('createCampaignController', ['$scope',
-      function($scope) {
+    angular.module('ioto').controller('createCampaignController', ['$scope', '$location',
+      function($scope, $location) {
         Parse.$ = jQuery;
 
         Parse.initialize("wpvbhNsxxZam6HYa63vmudxBgJrasHXLq7WTxkKH", "WhODpEkC35r18jewjzrpw22KJwxLZJxbGQQcyxST");
@@ -196,7 +196,8 @@ angular.module('ioto').controller('dashboardController', ['$scope', '$timeout', 
           project.save(null, {
             success: function(project) {
               // Execute any logic that should take place after the object is saved.
-              alert('New object created with objectId: ' + project.id);
+              //alert('New object created with objectId: ' + project.id);
+							$location.path('/campaign/' + project.id);
             },
             error: function(project, error) {
               // Execute any logic that should take place if the save fails.
