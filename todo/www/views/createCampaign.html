@@ -1,36 +1,41 @@
 <div class="row">
   <form class="col s12">
     <div class="row">
+      <div class="input-field col s12">
+        <input id="Title" type="text" class="validate">
+        <label for="first_name">Title</label>
+      </div>
+    </div>
+    <div class="row">
       <div class="input-field col s6">
-        <input id="first_name" type="text" class="validate">
+        <input id="name" type="text" class="validate">
         <label for="first_name">Contact</label>
       </div>
       <div class="input-field col s6">
-        <input id="last_name" type="text" class="validate">
-        <label for="last_name">Date</label>
+        <input id="date" type="text" class="validate">
+        <label for="date">Date</label>
       </div>
     </div>
     <div class="row">
       <div class="input-field col s6">
-        <input id="first_name" type="text" class="validate">
-        <label for="first_name">Where</label>
+        <input id="place" type="text" class="validate">
+        <label for="place">Where</label>
       </div>
       <div class="input-field col s6">
-        <input id="last_name" type="text" class="validate">
+        <input id="money" type="text" class="validate">
         <label for="last_name">Money Needed</label>
       </div>
     </div>
-    <div class="row">
 
       <div class="row">
         <div class="input-field col s12">
-          <textarea id="textarea1" class="materialize-textarea"></textarea>
+          <textarea id="description" class="materialize-textarea"></textarea>
           <label for="textarea1">Description</label>
         </div>
       </div>
       <div class="row">
         <div class="input-field col s4 offset-s5">
-          <button class="btn waves-effect waves-light btn-large" type="submit" name="action">Submit
+          <button ng-click="submit()" class="btn waves-effect waves-light btn-large" type="submit" name="action">Submit
           </button>
         </div>
       </div>
