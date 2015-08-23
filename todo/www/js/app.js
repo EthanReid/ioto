@@ -86,7 +86,7 @@ angular.module('ioto').controller('homeController', ['$scope',
         Digits.logIn()
             .done(function () {
                 /*handle the response*/
-            }) 
+            })
             .fail(function () {
                 /*handle the error*/
             });
