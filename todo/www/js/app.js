@@ -122,8 +122,8 @@ angular.module('ioto').controller('homeController', ['$scope',
 
 ]);
 
-angular.module('ioto').controller('dashboardController', ['$scope', '$timeout', 'userId',
-      function($scope, $timeout, userId) {
+angular.module('ioto').controller('dashboardController', ['$scope', '$timeout', 'userId', '$location',
+      function($scope, $timeout, userId, $location) {
         Parse.$ = jQuery;
 
         Parse.initialize("wpvbhNsxxZam6HYa63vmudxBgJrasHXLq7WTxkKH", "WhODpEkC35r18jewjzrpw22KJwxLZJxbGQQcyxST");
@@ -138,13 +138,16 @@ angular.module('ioto').controller('dashboardController', ['$scope', '$timeout', 
 						console.log(campaigns);
 						$timeout(function() {
 							$scope.campaigns = campaigns;
-
+							$scope.goToEvent = function() {
+								$location.path('/campaign/' + campaigns.objectId);
+							}
             });
           },
           error: function(object, error) {
             console.log(object, error);
           }
         });
+
       }
 
     ]);
