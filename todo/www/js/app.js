@@ -4,7 +4,7 @@ angular.module('ioto', [
 
 angular.module('ioto').factory('iotoFactory',
 	function () {
-		
+
 	}
 );
 
