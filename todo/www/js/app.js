@@ -41,7 +41,7 @@ angular.module('ioto').config(['$routeProvider',
             controller: 'campaignController',
             activetab: 'dashboard',
             resolve: {
-                'campaign': [ '$route',
+                'campaignId': [ '$route',
                 function($route) {
                     return {
                         id: $route.current.params.id
@@ -121,30 +121,38 @@ angular.module('ioto').controller('createCampaignController', ['$scope',
     }
 ]);
 
-angular.module('ioto').controller('campaignController', ['$scope',
-    function ($scope) {
+angular.module('ioto').controller('campaignController', ['$scope', '$timeout', 'campaignId',
+    function ($scope, $timeout, campaignId) {
+			console.log(campaignId);
+			$scope.campaign = {
+
+			};
 			Parse.$ = jQuery;
 
 			Parse.initialize("wpvbhNsxxZam6HYa63vmudxBgJrasHXLq7WTxkKH", "WhODpEkC35r18jewjzrpw22KJwxLZJxbGQQcyxST");
-			var ProjectInfo = Parse.Object.extend("ProjectPage");
-		  var project = new ProjectInfo();
-			//alert('' +project);
-			var pTitle = project.get("Title");
-			var pDescription = project.get("Description");
-			var pTime = project.get("When");
-			var pPlace = project.get("Where");
-			var pHost = project.get("Contact");
-			var pMoney = project.get("MoneyNeeded");
-			var pTag = project.get("Tag");
+			var CampaignInfo = Parse.Object.extend("ProjectPage");
+			var query = new Parse.Query(CampaignInfo);
+			query.get(campaignId.id, {
+				success: function(campaign) {
+					$timeout(function() {
+						$scope.campaign = {
+							title: campaign.get("Title"),
+							description: campaign.get("Description"),
+							time: campaign.get("When"),
+							place: campaign.get("Where"),
+							host: campaign.get("Contact"),
+							money: campaign.get("MoneyNeeded"),
+							tag: campaign.get("Tag")
+						}
 
-			var title = document.getElementById("Title");
-			var description = document.getElementById("description");
-			var time = document.getElementById("when");
-			var place = document.getElementById("where");
-			var host = document.getElementById("who");
-
+					});
+				},
+				error: function(object, error) {
+					console.log(object, error);
+				}
+			});
     }
-		$title.text(pTitle);
+
 ]);
 
 angular.module('ioto').controller('campaignsController', ['$scope',
