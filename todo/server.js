@@ -11,7 +11,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(useragent.express());
 
-
+app.use('/', require('./routes/routes'));
 
 app.use(express.static('www'));
 
