@@ -13,9 +13,7 @@ angular.module('ioto').config(['$routeProvider',
         resolve: {
           'userId': ['$route',
             function($route) {
-              return {
-                id: $route.current.params.id
-              };
+              return $route.current.params.id;
               // return userFactory.getUser($route.current.params.id)
               // .then(function(res){
               //     return res.data;
@@ -81,27 +79,34 @@ angular.module('ioto').controller('indexController', ['$scope', '$timeout',
         .fail(function(err) {
           console.log('digits failed', err);
         });
+        
+        // Init Parse db
+        Parse.$ = jQuery;
+        Parse.initialize("wpvbhNsxxZam6HYa63vmudxBgJrasHXLq7WTxkKH", "WhODpEkC35r18jewjzrpw22KJwxLZJxbGQQcyxST");
+        
+        $scope.bgBlack = false;
 	}
 ]);
 
-angular.module('ioto').controller('homeController', ['$scope',
-    function ($scope) {
+angular.module('ioto').controller('homeController', ['$scope', '$timeout', '$location',
+    function ($scope, $timeout, $location) {
+        $scope.$parent.bgBlack = true;
+        
         /* Launch the Login to Digits flow. */
         $scope.login = function () {
             Digits.logIn()
             .done(function (loginResponse) {
                 /*handle the response*/
-                console.log('Digits Done.');
                 var oAuthHeaders = parseOAuthHeaders(loginResponse.oauth_echo_headers);
-                console.log(oAuthHeaders);
+                console.log(loginResponse);
                 //setDigitsButton('Signing In…');
                 $.ajax({
                     type: 'POST',
                     url: '/digits',
                     data: oAuthHeaders,
                     success: function (res) {
-                        console.log(res);
-                        
+                        //console.log(res);
+                        getUserByTwitterId(res);
                     }
                 });
             })
@@ -125,51 +130,215 @@ angular.module('ioto').controller('homeController', ['$scope',
             };
         }
         
-        function getUserById(id) {
-          
+        function getUserByTwitterId(twitterUser) {
+          console.log(twitterUser.userID);
+          var records = Parse.Object.extend("users");
+          var query = new Parse.Query(records);
+          query.equalTo('twitterId', twitterUser.userID)
+            .find({
+              success: function(user) {
+                console.log(user.length);
+                if (user.length) {
+                  // user found, log in
+                  console.log('user found, redirect', user[0]);
+                  $timeout(function() {
+                    $location.path('/dashboard/' + user[0].id);
+                  });
+                } else {
+                  // user not in db, create record
+                  addTwitterUser(twitterUser);
+                }
+            },
+            error: function(object, error) {
+              console.log(object, error);
+            }
+          });
         }
         
-        function addUser() {
+        function addTwitterUser(twitterUser) {
+          var userInfo = Parse.Object.extend("users");
+          var user = new userInfo();
           
+          console.log(twitterUser);
+          user.set("twitterId", twitterUser.userID);
+          user.set("phoneNumber", twitterUser.phoneNumber);
+          
+          user.save(null, {
+            success: function(res) {
+              console.log('save success');
+              $timeout(function() {
+                $location.path('/dashboard/' + res.id);
+              });
+            },
+            error: function(project, error) {
+              console.log(error.message);
+              $timeout(function() {
+                $location.path('/');
+              });
+            }
+          });
         }
     }
 
 ]);
 
 angular.module('ioto').controller('dashboardController', ['$scope', '$timeout', 'userId', '$location',
-      function($scope, $timeout, userId, $location) {
-        Parse.$ = jQuery;
-
-        Parse.initialize("wpvbhNsxxZam6HYa63vmudxBgJrasHXLq7WTxkKH", "WhODpEkC35r18jewjzrpw22KJwxLZJxbGQQcyxST");
-        var CampaignInfo = Parse.Object.extend("ProjectPage");
-        var query = new Parse.Query(CampaignInfo);
-
-				console.log(userId);
-				console.log(userId.id);
-        query.equalTo('userId', userId.id)
-						 .find({
-          success: function(campaigns) {
-						console.log(campaigns);
-						$timeout(function() {
-							$scope.campaigns = campaigns;
-
-            });
-          },
-          error: function(object, error) {
-            console.log(object, error);
-          }
+  function($scope, $timeout, userId, $location) {
+    $scope.$parent.bgBlack = true;
+    $scope.user = null;
+    $scope.campaigns = [];
+        
+    Digits.getLoginStatus()
+    .done(function (res) {
+      console.log(res);
+      if (res.status != 'authorized') {
+        $timeout(function() {
+          $location.path('/');
         });
-				
+      } else {
+        /*handle the response*/
+        var oAuthHeaders = parseOAuthHeaders(res.oauth_echo_headers);
+        //setDigitsButton('Signing In…');
+        console.log(res, oAuthHeaders);
+        $.ajax({
+            type: 'POST',
+            url: '/digits',
+            data: oAuthHeaders,
+            success: function (res) {
+                console.log(res);
+                getUserByTwitterId(res);
+            }
+        });
       }
+    });
+    
+        /**
+        * Parse OAuth Echo Headers:
+        * 'X-Verify-Credentials-Authorization'
+        * 'X-Auth-Service-Provider'
+        */
+        function parseOAuthHeaders(oAuthEchoHeaders) {
+            var credentials = oAuthEchoHeaders['oauth_echo_header'];
+            var apiUrl = oAuthEchoHeaders['oauth_echo_service'];
 
-    ]);
+            return {
+                apiUrl: apiUrl,
+                credentials: credentials
+            };
+        }
+        
+        function getUserByTwitterId(twitterUser) {
+          console.log(twitterUser.userID);
+          var records = Parse.Object.extend("users");
+          var query = new Parse.Query(records);
+          query.equalTo('twitterId', twitterUser.userID)
+            .find({
+              success: function(user) {
+                console.log(user.length);
+                if (user.length) {
+
+                  $timeout(function() {
+                    $scope.user = user;
+                    console.log($scope.user);
+                  });
+                } else {
+                  // user not in db, create record
+                  $location.path('/');
+                }
+            },
+            error: function(object, error) {
+              console.log(object, error);
+            }
+          });
+        }
+
+    
+    var campaignInfo = Parse.Object.extend("ProjectPage");
+    var campaigns = new Parse.Query(campaignInfo);
+
+    campaigns.equalTo('userId', userId).find({
+      success: function(campaigns) {
+        console.log(campaigns);
+        $timeout(function() {
+          $scope.campaigns = campaigns;
+        });
+      },
+      error: function(object, error) {
+        console.log(object, error);
+      }
+    });
+  }
+]);
 
 
-    angular.module('ioto').controller('createCampaignController', ['$scope', '$location',
-      function($scope, $location) {
-        Parse.$ = jQuery;
+    angular.module('ioto').controller('createCampaignController', ['$scope', '$location', '$timeout',
+      function($scope, $location, $timeout) {
+        $scope.$parent.bgBlack = false;
+        
+    Digits.getLoginStatus()
+    .done(function (res) {
+      console.log(res);
+      if (res.status != 'authorized') {
+        $timeout(function() {
+          $location.path('/');
+        });
+      } else {
+        /*handle the response*/
+        var oAuthHeaders = parseOAuthHeaders(res.oauth_echo_headers);
+        //setDigitsButton('Signing In…');
+        $.ajax({
+            type: 'POST',
+            url: '/digits',
+            data: oAuthHeaders,
+            success: function (res) {
+                //console.log(res);
+                getUserByTwitterId(res);
+            }
+        });
+      }
+    });
+    
+        /**
+        * Parse OAuth Echo Headers:
+        * 'X-Verify-Credentials-Authorization'
+        * 'X-Auth-Service-Provider'
+        */
+        function parseOAuthHeaders(oAuthEchoHeaders) {
+            var credentials = oAuthEchoHeaders['X-Verify-Credentials-Authorization'];
+            var apiUrl = oAuthEchoHeaders['X-Auth-Service-Provider'];
 
-        Parse.initialize("wpvbhNsxxZam6HYa63vmudxBgJrasHXLq7WTxkKH", "WhODpEkC35r18jewjzrpw22KJwxLZJxbGQQcyxST");
+            return {
+                apiUrl: apiUrl,
+                credentials: credentials
+            };
+        }
+        
+        function getUserByTwitterId(twitterUser) {
+          console.log(twitterUser.userID);
+          var records = Parse.Object.extend("users");
+          var query = new Parse.Query(records);
+          query.equalTo('twitterId', twitterUser.userID)
+            .find({
+              success: function(user) {
+                console.log(user.length);
+                if (user.length) {
+
+                  $timeout(function() {
+                    $scope.user = user;
+                    console.log($scope.user);
+                  });
+                } else {
+                  // user not in db, create record
+                  $location.path('/');
+                }
+            },
+            error: function(object, error) {
+              console.log(object, error);
+            }
+          });
+        }
+
+        
         var ProjectInfo = Parse.Object.extend("ProjectPage");
         var project = new ProjectInfo();
 
@@ -184,7 +353,6 @@ angular.module('ioto').controller('dashboardController', ['$scope', '$timeout', 
           var Where = document.getElementById("place").value;
           var Money = parseInt(document.getElementById("money").value);
 
-          console.log(Name);
           project.set("title", Title);
           project.set("description", description);
           project.set("when", theDate);
@@ -215,9 +383,9 @@ angular.module('ioto').controller('dashboardController', ['$scope', '$timeout', 
         $scope.campaign = {
 
         };
-        Parse.$ = jQuery;
+        // Parse.$ = jQuery;
 
-        Parse.initialize("wpvbhNsxxZam6HYa63vmudxBgJrasHXLq7WTxkKH", "WhODpEkC35r18jewjzrpw22KJwxLZJxbGQQcyxST");
+        // Parse.initialize("wpvbhNsxxZam6HYa63vmudxBgJrasHXLq7WTxkKH", "WhODpEkC35r18jewjzrpw22KJwxLZJxbGQQcyxST");
         var CampaignInfo = Parse.Object.extend("ProjectPage");
         var query = new Parse.Query(CampaignInfo);
         query.get(campaignId.id, {
@@ -240,7 +408,7 @@ angular.module('ioto').controller('dashboardController', ['$scope', '$timeout', 
           }
         });
 
-        console.log(SimplifyCommerce);
+
         SimplifyCommerce.hostedPayments(
             function(response) {
                 // response handler
@@ -258,9 +426,9 @@ angular.module('ioto').controller('dashboardController', ['$scope', '$timeout', 
       function($scope, $timeout) {
 
         $scope.campaigns = [];
-        Parse.$ = jQuery;
+        // Parse.$ = jQuery;
 
-        Parse.initialize("wpvbhNsxxZam6HYa63vmudxBgJrasHXLq7WTxkKH", "WhODpEkC35r18jewjzrpw22KJwxLZJxbGQQcyxST");
+        // Parse.initialize("wpvbhNsxxZam6HYa63vmudxBgJrasHXLq7WTxkKH", "WhODpEkC35r18jewjzrpw22KJwxLZJxbGQQcyxST");
         var CampaignInfo = Parse.Object.extend("ProjectPage");
         var query = new Parse.Query(CampaignInfo);
         query.find({
