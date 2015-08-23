@@ -11,15 +11,18 @@ angular.module('ioto').config(['$routeProvider',
             controller: 'dashboardController',
             activetab: 'dashboard',
             resolve: {
-                'user': [ '$route', 'userFactory',
-                function($route, userFactory) {
-                    return userFactory.getUser($route.current.params.id)
-                    .then(function(res){
-                        return res.data;
-                    })
-                    .catch(function(error){
-                        return null;
-                    });
+                'user': [ '$route',
+                function($route) {
+                    return {
+                        id: $route.current.params.id
+                    };
+                    // return userFactory.getUser($route.current.params.id)
+                    // .then(function(res){
+                    //     return res.data;
+                    // })
+                    // .catch(function(error){
+                    //     return null;
+                    // });
                 }
             ]}
         })
@@ -38,15 +41,18 @@ angular.module('ioto').config(['$routeProvider',
             controller: 'campaignController',
             activetab: 'dashboard',
             resolve: {
-                'campaign': [ '$route', 'campaignFactory',
-                function($route, campaignFactory) {
-                    return campaignFactory.getCampaign($route.current.params.id)
-                    .then(function(res){
-                        return res.data;
-                    })
-                    .catch(function(error){
-                        return null;
-                    });
+                'campaign': [ '$route',
+                function($route) {
+                    return {
+                        id: $route.current.params.id
+                    };
+                    // return campaignFactory.getCampaign($route.current.params.id)
+                    // .then(function(res){
+                    //     return res.data;
+                    // })
+                    // .catch(function(error){
+                    //     return null;
+                    // });
                 }
             ]}
         })
@@ -55,7 +61,6 @@ angular.module('ioto').config(['$routeProvider',
           controller: 'homeController',
           activetab: 'home'
         })
-        .otherwise('/');
 	}
 ]);
 
