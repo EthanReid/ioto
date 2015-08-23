@@ -2,10 +2,11 @@ var express = require('express'),
 	request = require('request'),
 	nconf = require('nconf'),
 	url = require('url'),
-	router = express().route;
+	router = express.Router();
 
 router.get('/test', function () {
-	console.log('test');
+	console.log('here');
+	return;
 });
 
 router.post('/digits', function (req, res) {
@@ -64,3 +65,5 @@ router.post('/digits', function (req, res) {
 		}
 	});
 });
+
+module.exports = router;
