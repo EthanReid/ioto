@@ -158,8 +158,28 @@ angular.module('ioto').controller('campaignController', ['$scope', '$timeout', '
 
 ]);
 
-angular.module('ioto').controller('campaignsController', ['$scope',
-    function ($scope) {
+angular.module('ioto').controller('campaignsController', ['$scope', '$timeout',
+    function ($scope, $timeout) {
+
+			$scope.campaigns = [];
+			Parse.$ = jQuery;
+
+			Parse.initialize("wpvbhNsxxZam6HYa63vmudxBgJrasHXLq7WTxkKH", "WhODpEkC35r18jewjzrpw22KJwxLZJxbGQQcyxST");
+			var CampaignInfo = Parse.Object.extend("ProjectPage");
+			var query = new Parse.Query(CampaignInfo);
+			query.find({
+				success: function(campaigns) {
+					$timeout(function() {
+						$scope.campaigns = campaigns;
+
+console.log($scope.campaigns);
+
+					});
+				},
+				error: function(object, error) {
+					console.log(object, error);
+				}
+			});
 
     }
 ]);
