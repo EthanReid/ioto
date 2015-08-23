@@ -98,7 +98,7 @@ angular.module('ioto').controller('createCampaignController', ['$scope',
 
 angular.module('ioto').controller('campaignController', ['$scope',
     function ($scope) {
-
+			alert('Something happened');
 			Parse.$ = jQuery;
 
 			Parse.initialize("wpvbhNsxxZam6HYa63vmudxBgJrasHXLq7WTxkKH", "WhODpEkC35r18jewjzrpw22KJwxLZJxbGQQcyxST");
