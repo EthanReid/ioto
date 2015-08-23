@@ -63,7 +63,7 @@ angular.module('ioto').config(['$routeProvider', '$httpProvider',
 
 angular.module('ioto').factory('iotoFactory',
 	function () {
-		
+
 	}
 );
 
@@ -77,30 +77,47 @@ angular.module('ioto').controller('indexController', ['$scope', '$timeout', '$io
 
 angular.module('ioto').controller('homeController', ['$scope',
     function ($scope) {
-        
+
     }
 ]);
 
 angular.module('ioto').controller('dashboardController', ['$scope',
     function ($scope) {
-        
+
     }
 ]);
 
 angular.module('ioto').controller('createCampaignController', ['$scope',
     function ($scope) {
-        
+
     }
 ]);
 
 angular.module('ioto').controller('campaignController', ['$scope',
     function ($scope) {
-        
+
+			Parse.$ = jQuery;
+
+			Parse.initialize("wpvbhNsxxZam6HYa63vmudxBgJrasHXLq7WTxkKH", "WhODpEkC35r18jewjzrpw22KJwxLZJxbGQQcyxST");
+			var ProjectInfo = Parse.Object.extend("ProjectPage");
+		  var project = new ProjectInfo();
+
+			project.save(null, {
+		    success: function(project) {
+		      // Execute any logic that should take place after the object is saved.
+		      alert('New object created with objectId: ' + campainObject.id);
+		    },
+		    error: function(project, error) {
+		      // Execute any logic that should take place if the save fails.
+		      // error is a Parse.Error with an error code and message.
+		      alert('Failed to create new object, with error code: ' + error.message);
+		    }
+		  });
     }
 ]);
 
 angular.module('ioto').controller('campaignsController', ['$scope',
     function ($scope) {
-        
+
     }
 ]);
