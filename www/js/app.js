@@ -105,8 +105,13 @@ angular.module('ioto').controller('homeController', ['$scope', '$timeout', '$loc
                     url: '/digits',
                     data: oAuthHeaders,
                     success: function (res) {
+<<<<<<< Updated upstream
                         //console.log(res);
                         getUserByTwitterId(res);
+=======
+                        console.log(res);
+
+>>>>>>> Stashed changes
                     }
                 });
             })
@@ -129,6 +134,7 @@ angular.module('ioto').controller('homeController', ['$scope', '$timeout', '$loc
                 credentials: credentials
             };
         }
+<<<<<<< Updated upstream
         
         function getUserByTwitterId(twitterUser) {
           console.log(twitterUser.userID);
@@ -177,6 +183,15 @@ angular.module('ioto').controller('homeController', ['$scope', '$timeout', '$loc
               });
             }
           });
+=======
+
+        function getUserById(id) {
+
+        }
+
+        function addUser() {
+
+>>>>>>> Stashed changes
         }
     }
 
@@ -262,9 +277,13 @@ angular.module('ioto').controller('dashboardController', ['$scope', '$timeout', 
         $timeout(function() {
           $scope.campaigns = campaigns;
         });
+<<<<<<< Updated upstream
       },
       error: function(object, error) {
         console.log(object, error);
+=======
+
+>>>>>>> Stashed changes
       }
     });
   }
